@@ -4,7 +4,7 @@ import Column from "./Column"
 import { useState } from 'react';
 
 function Board() {
-    const columns = [
+    const [columnData, setColumnData] = useState([
     {
         id: 1,
         title: "Todo",
@@ -130,9 +130,8 @@ function Board() {
             },
         ],
     },
-];
+]);
 
-    const [isDropped, setIsDropped] = useState(false);
     
     return (
         
@@ -142,11 +141,33 @@ function Board() {
                     if (event.canceled) return;
 
                     const {target} = event.operation;
-                    setIsDropped(target?.id === 'droppable');
+                    setColumnData((prevColumns) => {
+                        const sourceColumnIndex = prevColumns.findIndex((column) =>
+                            column.cards.some((card) => card.id === event.operation.source?.id)
+                        );
+                        const targetColumnIndex = prevColumns.findIndex((column) => column.id === Number(target?.id));
+                        if (sourceColumnIndex === -1 || targetColumnIndex === -1) return prevColumns;
+
+                        const updatedColumns = [...prevColumns];
+                        const [movedCard]: any[] = updatedColumns[sourceColumnIndex].cards.splice(
+                            updatedColumns[sourceColumnIndex].cards.findIndex((card) => card.id === event.operation.source?.id),
+                            1
+                        );
+                        updatedColumns[targetColumnIndex].cards.push(movedCard);
+
+                        return updatedColumns;
+                    });
                 }}
             >
-                {columns.map((column) => (
-                    <Column key={column.id} title={column.title} count={column.count} cards={column.cards} />
+                {columnData.map((column) => (
+                    <Column 
+                        id={column.id} 
+                        key={column.id} 
+                        title={column.title} 
+                        count={column.count} 
+                        cards={column.cards}
+
+                    />
                 ))}
             </DragDropProvider>
         </div>

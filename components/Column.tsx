@@ -1,8 +1,12 @@
+import { useDroppable } from '@dnd-kit/react';
 import Card from './Card';
 
-function Column({ title, count, cards }: { title: string; count: number; cards: any[] }) {
-  return (
-    <div className="flex flex-col gap-2 p-4 bg-white rounded shadow min-w-[200px] max-h-11/12 overflow-auto">
+function Column({ id, title, count, cards }: { id:number;title: string; count: number; cards: any[] }) {
+    const {ref} = useDroppable({
+        id,
+    });
+    return (
+    <div ref={ref} className="flex flex-col gap-2 p-4 bg-white rounded shadow min-w-[200px] max-h-11/12 ">
       
         <div className="flex items-center">
             <h3 className="text-sm text-gray-500 font-semibold">{title}</h3>
@@ -11,7 +15,7 @@ function Column({ title, count, cards }: { title: string; count: number; cards: 
             </span>
         </div>
       
-      <div>
+      <div className='flex flex-col gap-2 p-4 overflow-auto'>
         {cards.map((card) => (
           <Card 
             key={card.id} 
@@ -20,7 +24,7 @@ function Column({ title, count, cards }: { title: string; count: number; cards: 
             label={card.label} 
             description={card.description} 
             assignee={card.assignee} 
-            doneAt={card.doneAt} 
+            doneAt={card.doneAt}
           />
         ))}
       </div>
