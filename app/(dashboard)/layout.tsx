@@ -1,8 +1,12 @@
+import TopBar from "@/components/TopBar";
+
 export default function DashboardLayout({ children }: LayoutProps<"/">) {
   return (
     <>
-    <div>hi</div>
+      <TopBar />
+      <div>
         {children}
-    </>        
+      </div>
+    </>
   );
 }
