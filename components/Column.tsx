@@ -1,4 +1,3 @@
-import React from 'react'
 import Card from './Card';
 
 function Column({ title, count, cards }: { title: string; count: number; cards: any[] }) {
@@ -14,7 +13,15 @@ function Column({ title, count, cards }: { title: string; count: number; cards: 
       
       <div>
         {cards.map((card) => (
-          <Card key={card.id} title={card.title} label={card.label} description={card.description} assignee={card.assignee} doneAt={card.doneAt} />
+          <Card 
+            key={card.id} 
+            id={card.id} 
+            title={card.title} 
+            label={card.label} 
+            description={card.description} 
+            assignee={card.assignee} 
+            doneAt={card.doneAt} 
+          />
         ))}
       </div>
     </div>

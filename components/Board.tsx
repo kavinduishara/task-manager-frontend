@@ -1,5 +1,7 @@
-import { time } from "console"
+"use client"
+import {DragDropProvider} from '@dnd-kit/react';
 import Column from "./Column"
+import { useState } from 'react';
 
 function Board() {
     const columns = [
@@ -130,11 +132,23 @@ function Board() {
     },
 ];
 
+    const [isDropped, setIsDropped] = useState(false);
+    
     return (
+        
         <div className="flex gap-4">
-            {columns.map((column) => (
-                <Column key={column.id} title={column.title} count={column.count} cards={column.cards} />
-            ))}
+            <DragDropProvider
+                onDragEnd={(event) => {
+                    if (event.canceled) return;
+
+                    const {target} = event.operation;
+                    setIsDropped(target?.id === 'droppable');
+                }}
+            >
+                {columns.map((column) => (
+                    <Column key={column.id} title={column.title} count={column.count} cards={column.cards} />
+                ))}
+            </DragDropProvider>
         </div>
     )
 }
