@@ -16,7 +16,7 @@ function Board() {
                 label: "design",
                 description: "Create the initial design for the product landing page.",
                 assignee: "John Doe",
-                doneAt: null,
+                dueDate: null,
             },
             {
                 id: 2,
@@ -24,7 +24,7 @@ function Board() {
                 label: "development",
                 description: "Initialize the repository and configure the development environment.",
                 assignee: "Jane Smith",
-                doneAt: null,
+                dueDate: null,
             },
             {
                 id: 3,
@@ -32,7 +32,7 @@ function Board() {
                 label: "backend",
                 description: "Design the database tables and relationships for the application.",
                 assignee: "Mike Johnson",
-                doneAt: null,
+                dueDate: null,
             },
             {
                 id: 4,
@@ -40,7 +40,7 @@ function Board() {
                 label: "documentation",
                 description: "Document all available API endpoints and request formats.",
                 assignee: "Sarah Wilson",
-                doneAt: null,
+                dueDate: null,
             },
             {
                 id: 5,
@@ -48,7 +48,7 @@ function Board() {
                 label: "feature",
                 description: "Implement user registration, login, and JWT authentication.",
                 assignee: "Alex Brown",
-                doneAt: null,
+                dueDate: null,
             },
         ],
     },
@@ -63,7 +63,7 @@ function Board() {
                 label: "frontend",
                 description: "Implement the main dashboard layout and reusable components.",
                 assignee: { name: "John Doe", profilePicture: "https://randomuser.me/api/portraits/men/1.jpg" },
-                doneAt: null,
+                dueDate: null,
             },
             {
                 id: 7,
@@ -71,7 +71,7 @@ function Board() {
                 label: "feature",
                 description: "Add functionality for creating, editing, and deleting tasks.",
                 assignee: { name: "Jane Smith", profilePicture: "https://randomuser.me/api/portraits/women/1.jpg" },
-                doneAt: null,
+                dueDate: null,
             },
             {
                 id: 8,
@@ -79,7 +79,7 @@ function Board() {
                 label: "devops",
                 description: "Create a GitHub Actions workflow for automated deployment.",
                 assignee: { name: "Mike Johnson", profilePicture: "https://randomuser.me/api/portraits/men/2.jpg" },
-                doneAt: null,
+                dueDate: null,
             },
             {
                 id: 9,
@@ -87,7 +87,7 @@ function Board() {
                 label: "bug",
                 description: "Improve the dashboard layout for tablet and mobile devices.",
                 assignee: { name: "Sarah Wilson", profilePicture: "https://randomuser.me/api/portraits/women/2.jpg" },
-                doneAt: null,
+                dueDate: null,
             },
         ],
     },
@@ -102,7 +102,7 @@ function Board() {
                 label: "development",
                 description: "Set up the initial project structure and folder organization.",
                 assignee: "John Doe",
-                doneAt: new Date(2026, 7, 28, 10, 30),
+                dueDate: new Date(2026, 7, 28, 10, 30),
             },
             {
                 id: 11,
@@ -110,7 +110,7 @@ function Board() {
                 label: "backend",
                 description: "Connect the application to the PostgreSQL database.",
                 assignee: "Jane Smith",
-                doneAt: new Date(2026, 7, 29, 14, 15),
+                dueDate: new Date(2026, 7, 29, 14, 15),
             },
             {
                 id: 12,
@@ -118,7 +118,7 @@ function Board() {
                 label: "frontend",
                 description: "Build the login form and connect it to the authentication API.",
                 assignee: "Mike Johnson",
-                doneAt: new Date(2026, 7, 30, 11, 45),
+                dueDate: new Date(2026, 7, 30, 11, 45),
             },
             {
                 id: 13,
@@ -126,7 +126,7 @@ function Board() {
                 label: "devops",
                 description: "Containerize the application using Docker.",
                 assignee: "Sarah Wilson",
-                doneAt: new Date(2026, 7, 31, 16, 20),
+                dueDate: new Date(2026, 7, 31, 16, 20),
             },
         ],
     },

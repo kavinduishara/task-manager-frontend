@@ -24,7 +24,7 @@ function Column({ id, title, count, cards }: { id:number;title: string; count: n
             label={card.label} 
             description={card.description} 
             assignee={card.assignee} 
-            doneAt={card.doneAt}
+            dueDate={card.dueDate}
           />
         ))}
       </div>

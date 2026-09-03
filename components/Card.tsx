@@ -1,35 +1,8 @@
+import { CardProps, labelColors } from "@/types/cardTypes";
 import { useDraggable } from "@dnd-kit/react";
 import { Clock } from "lucide-react";
 
-type Label =
-    | "design"
-    | "development"
-    | "backend"
-    | "documentation"
-    | "feature"
-    | "frontend"
-    | "devops"
-    | "bug";
 
-interface CardProps {
-    id: number;
-    title: string;
-    label?: Label;
-    description?: string;
-    assignee?: { name: string; profilePicture: string };
-    doneAt?: Date | null;
-}
-
-const labelColors: Record<Label, string> = {
-    design: "bg-blue-100 text-blue-700",
-    development: "bg-green-100 text-green-700",
-    backend: "bg-purple-100 text-purple-700",
-    documentation: "bg-gray-100 text-gray-700",
-    feature: "bg-yellow-100 text-yellow-700",
-    frontend: "bg-cyan-100 text-cyan-700",
-    devops: "bg-orange-100 text-orange-700",
-    bug: "bg-red-100 text-red-700",
-};
 function formatRelativeTime(date: Date | null) { 
     if (!date) return 'Not completed'; 
     const elapsedSeconds = Math.round((date.getTime() - Date.now()) / 1000); 
@@ -55,7 +28,7 @@ function Card({
     label,
     description,
     assignee,
-    doneAt
+    dueDate
 }: CardProps) {
     const { ref } = useDraggable({ id });
 
@@ -105,7 +78,7 @@ function Card({
 
                 <div className="flex items-center gap-1 text-xs text-gray-400">
                     <Clock size={16} />
-                    {formatRelativeTime(doneAt ?? null)}
+                    {formatRelativeTime(dueDate ?? null)}
                 </div>
             </div>
         </div>
