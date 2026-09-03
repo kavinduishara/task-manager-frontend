@@ -3,8 +3,11 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation' // 2. Import usePathname
 import { LayoutDashboard, Plus, Search, User2, Users2 } from "lucide-react";
+import UserDetails from './UserDetails';
+import { useState } from 'react';
 
 export default function TopBar() {
+  const [showUserDetails, setShowUserDetails] = useState(false);
   const pathname = usePathname() // 3. Get the current active path
 
   // 4. Helper function to apply dynamic styles
@@ -50,10 +53,13 @@ export default function TopBar() {
             <span>Add Card</span>
           </Link>
           
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white text-xs font-medium ml-1">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white text-xs font-medium ml-1" onClick={()=>setShowUserDetails(!showUserDetails)}>
+
             <User2 size={16}/>
           </div>
         </div>
+
+        {showUserDetails && <UserDetails />}
 
       </div>
     </div>

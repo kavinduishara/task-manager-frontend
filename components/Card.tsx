@@ -1,10 +1,11 @@
 import { CardProps, labelColors } from "@/types/cardTypes";
 import { useDraggable } from "@dnd-kit/react";
 import { Clock } from "lucide-react";
+import Avatar from "./Avatar";
 
 
 function formatRelativeTime(date: Date | null) { 
-    if (!date) return 'Not completed'; 
+    if (!date) return ''; 
     const elapsedSeconds = Math.round((date.getTime() - Date.now()) / 1000); 
     const units = [ 
         { unit: 'year', seconds: 31536000 }, 
@@ -56,31 +57,22 @@ function Card({
                 </p>
             )}
 
-            <div className="flex justify-between items-center mt-2 border-t border-gray-200 pt-2">
-                <div className="flex items-center gap-2">
-                    {assignee?.profilePicture && (
-                        <img
-                            src={assignee.profilePicture}
-                            className="w-6 h-6 rounded-full"
-                        />
-                    )}
-                    {!assignee?.profilePicture && assignee?.name && (
-                        <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-gray-700">
-                            {assignee.name.split(' ')[0].charAt(0).toUpperCase() + assignee.name.split(' ')[1]?.charAt(0).toUpperCase()}
-                        </div>
-                    )}
+            {(dueDate || assignee) && (
+                <div className="flex justify-between items-center mt-2 border-t border-gray-200 pt-2">
+                    {assignee && <Avatar user={assignee} />}
                     {!assignee && (
                         <span className="text-sm text-gray-500 rounded-full px-2 py-1 bg-gray-100">
                             Unassigned
                         </span>
                     )}
                 </div>
-
-                <div className="flex items-center gap-1 text-xs text-gray-400">
-                    <Clock size={16} />
-                    {formatRelativeTime(dueDate ?? null)}
-                </div>
-            </div>
+            )}
+                {dueDate && (
+                    <div className="flex items-center gap-1 text-xs text-gray-400">
+                        <Clock size={16} />
+                        {formatRelativeTime(dueDate ?? null)}
+                    </div>
+                )}
         </div>
     );
 }
