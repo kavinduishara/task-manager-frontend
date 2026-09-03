@@ -62,7 +62,7 @@ function Board() {
                 title: "Build dashboard UI",
                 label: "frontend",
                 description: "Implement the main dashboard layout and reusable components.",
-                assignee: "John Doe",
+                assignee: { name: "John Doe", profilePicture: "https://randomuser.me/api/portraits/men/1.jpg" },
                 doneAt: null,
             },
             {
@@ -70,7 +70,7 @@ function Board() {
                 title: "Implement task management",
                 label: "feature",
                 description: "Add functionality for creating, editing, and deleting tasks.",
-                assignee: "Jane Smith",
+                assignee: { name: "Jane Smith", profilePicture: "https://randomuser.me/api/portraits/women/1.jpg" },
                 doneAt: null,
             },
             {
@@ -78,7 +78,7 @@ function Board() {
                 title: "Configure CI/CD pipeline",
                 label: "devops",
                 description: "Create a GitHub Actions workflow for automated deployment.",
-                assignee: "Mike Johnson",
+                assignee: { name: "Mike Johnson", profilePicture: "https://randomuser.me/api/portraits/men/2.jpg" },
                 doneAt: null,
             },
             {
@@ -86,7 +86,7 @@ function Board() {
                 title: "Fix mobile responsiveness",
                 label: "bug",
                 description: "Improve the dashboard layout for tablet and mobile devices.",
-                assignee: "Sarah Wilson",
+                assignee: { name: "Sarah Wilson", profilePicture: "https://randomuser.me/api/portraits/women/2.jpg" },
                 doneAt: null,
             },
         ],

@@ -6,7 +6,7 @@ function Column({ id, title, count, cards }: { id:number;title: string; count: n
         id,
     });
     return (
-    <div ref={ref} className="flex h-full min-h-0 w-1/3 flex-col gap-2 rounded bg-white p-4 shadow">
+    <div ref={ref} className="flex h-full min-h-0  flex-col gap-2 rounded bg-gray-100 p-4 shadow">
       
         <div className="flex items-center">
             <h3 className="text-sm text-gray-500 font-semibold">{title}</h3>
