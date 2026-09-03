@@ -6,7 +6,7 @@ function Column({ id, title, count, cards }: { id:number;title: string; count: n
         id,
     });
     return (
-    <div ref={ref} className="flex flex-col gap-2 p-4 bg-white rounded shadow min-w-[200px] max-h-11/12 ">
+    <div ref={ref} className="flex h-full min-h-0 w-1/3 flex-col gap-2 rounded bg-white p-4 shadow">
       
         <div className="flex items-center">
             <h3 className="text-sm text-gray-500 font-semibold">{title}</h3>
@@ -15,7 +15,7 @@ function Column({ id, title, count, cards }: { id:number;title: string; count: n
             </span>
         </div>
       
-      <div className='flex flex-col gap-2 p-4 overflow-auto'>
+      <div className='flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto p-4'>
         {cards.map((card) => (
           <Card 
             key={card.id} 

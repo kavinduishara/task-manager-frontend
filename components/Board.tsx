@@ -135,7 +135,7 @@ function Board() {
     
     return (
         
-        <div className="flex gap-4">
+        <div className="flex h-full min-h-0 w-full gap-4">
             <DragDropProvider
                 onDragEnd={(event) => {
                     if (event.canceled) return;
