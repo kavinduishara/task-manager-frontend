@@ -1,8 +1,9 @@
 import React from 'react'
 import Section from './Section'
-import { STATUSES, TAGS, type Label } from '@/types/cardTypes';
+import { TAGS, type Label } from '@/types/cardTypes';
+import { TASK_STATUS_OPTIONS, type TaskStatus } from '@/types/task';
 
-function TaskDetails({title, setTitle, status, setStatus, priority, setPriority, selectedTag, setSelectedTag}: {title: string; setTitle: (title: string) => void; status: string; setStatus: (status: string) => void; priority: string; setPriority: (priority: string) => void; selectedTag: Label | undefined; setSelectedTag: (tag: Label) => void}) {
+function TaskDetails({title, setTitle, status, setStatus, priority, setPriority, selectedTag, setSelectedTag}: {title: string; setTitle: (title: string) => void; status: TaskStatus; setStatus: (status: TaskStatus) => void; priority: string; setPriority: (priority: string) => void; selectedTag: Label | undefined; setSelectedTag: (tag: Label) => void}) {
   return (
     <Section number={1} title="Task Details">
             <div className="flex flex-col gap-4">
@@ -26,11 +27,13 @@ function TaskDetails({title, setTitle, status, setStatus, priority, setPriority,
                   </label>
                   <select
                     value={status}
-                    onChange={(e) => setStatus(e.target.value)}
+                    onChange={(e) => setStatus(e.target.value as TaskStatus)}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-200"
                   >
-                    {STATUSES.map((s) => (
-                      <option key={s}>{s}</option>
+                    {TASK_STATUS_OPTIONS.map((statusOption) => (
+                      <option key={statusOption.value} value={statusOption.value}>
+                        {statusOption.label}
+                      </option>
                     ))}
                   </select>
                 </div>

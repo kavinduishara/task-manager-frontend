@@ -1,25 +1,27 @@
 import { apiFetch } from "./client";
+import type {
+  CreateTaskInput,
+  GetTaskResponse,
+  GetTasksResponse,
+  Task,
+  TaskMutationResponse,
+  UpdateTaskInput,
+} from "@/types/task";
 
-export async function getTasks() {
-  const data = await apiFetch("/api/tasks");
+export async function getTasks(): Promise<Task[]> {
+  const data = await apiFetch<GetTasksResponse>("/tasks");
 
   return data.data;
 }
 
-export async function getTask(id: string) {
-  const data = await apiFetch(`/api/tasks/${id}`);
+export async function getTask(id: string): Promise<Task> {
+  const data = await apiFetch<GetTaskResponse>(`/tasks/${id}`);
 
   return data.data;
 }
 
-export async function createTask(task: {
-  title: string;
-  description: string;
-  status: string;
-  assignee?: string;
-  dueDate?: string;
-}) {
-  const data = await apiFetch("/api/tasks", {
+export async function createTask(task: CreateTaskInput): Promise<Task> {
+  const data = await apiFetch<TaskMutationResponse>("/tasks", {
     method: "POST",
     body: JSON.stringify(task),
   });
@@ -29,15 +31,9 @@ export async function createTask(task: {
 
 export async function updateTask(
   id: string,
-  task: Partial<{
-    title: string;
-    description: string;
-    status: string;
-    assignee: string;
-    dueDate: string;
-  }>
-) {
-  const data = await apiFetch(`/api/tasks/${id}`, {
+  task: UpdateTaskInput
+): Promise<Task> {
+  const data = await apiFetch<TaskMutationResponse>(`/tasks/${id}`, {
     method: "PATCH",
     body: JSON.stringify(task),
   });
@@ -46,7 +42,7 @@ export async function updateTask(
 }
 
 export async function deleteTask(id: string) {
-  return apiFetch(`/api/tasks/${id}`, {
+  return apiFetch(`/tasks/${id}`, {
     method: "DELETE",
   });
 }

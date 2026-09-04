@@ -6,11 +6,12 @@ import TaskDetails from "@/components/TaskDetails";
 import TaskDescription from "@/components/TaskDescription";
 import AssigTimeAndUser from "@/components/AssigTimeAndUser";
 import type { Label } from "@/types/cardTypes";
+import type { TaskStatus } from "@/types/task";
 
 
 export default function AddTask() {
   const [title, setTitle] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState<TaskStatus>("TODO");
   const [priority, setPriority] = useState("");
   const [selectedTag, setSelectedTag] = useState<Label | undefined>();
   const [description, setDescription] = useState("");

@@ -1,4 +1,4 @@
-import { CardProps, labelColors } from "@/types/cardTypes";
+import { labelColors, type CardProps } from "@/types/cardTypes";
 import { useDraggable } from "@dnd-kit/react";
 import { Clock } from "lucide-react";
 import Avatar from "./Avatar";
@@ -65,14 +65,15 @@ function Card({
                             Unassigned
                         </span>
                     )}
-                </div>
-            )}
-                {dueDate && (
+                    {dueDate && (
                     <div className="flex items-center gap-1 text-xs text-gray-400">
                         <Clock size={16} />
                         {formatRelativeTime(dueDate ?? null)}
                     </div>
                 )}
+                </div>
+            )}
+                
         </div>
     );
 }
