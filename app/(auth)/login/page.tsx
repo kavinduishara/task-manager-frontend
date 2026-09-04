@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
+import { login } from '@/libs/api/auth';
 
 export default function Login() {
   const router = useRouter();
@@ -12,14 +13,31 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     if (!email || !password) {
       setError('Enter your email address and password to continue.');
       return;
     }
+
     setError('');
-    router.push('/');
+
+    try {
+      const data = await login(email, password);
+
+      console.log(data);
+
+      router.push('/');
+    } catch (error) {
+      console.error(error);
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : 'Invalid email or password.'
+      );
+    }
   }
 
   return (

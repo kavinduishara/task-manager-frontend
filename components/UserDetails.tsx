@@ -1,6 +1,10 @@
+import { useRouter } from "next/navigation";
+
 import { ArrowRight, CheckSquare, LogOut, User } from "lucide-react";
 import UserHeader from "./UserHeader";
 import UserStats from "./UserStats";
+import { logout } from "@/libs/api/auth";
+
 
 function MenuItem({ icon: Icon, label, onClick,children,color }: { icon: React.ComponentType<{ className?: string }>; label: string; onClick?: () => void; children?: React.ReactNode; color?: string }) {
   return (
@@ -21,6 +25,19 @@ function MenuItem({ icon: Icon, label, onClick,children,color }: { icon: React.C
 }
 
 function UserDetails() {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+
+      router.push("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+  
   return (
     <div className="absolute top-17 right-5 z-50 w-72 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden">
       
@@ -56,7 +73,7 @@ function UserDetails() {
             <MenuItem
             icon={LogOut}
             label="Logout"
-            onClick={() => console.log("Logout clicked")}
+            onClick={handleLogout}
             color="text-red-600 hover:text-red-700"
             />
         </div>
