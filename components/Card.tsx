@@ -1,6 +1,6 @@
 import { labelColors, type CardProps } from "@/types/cardTypes";
 import { useDraggable } from "@dnd-kit/react";
-import { Clock } from "lucide-react";
+import { Clock, Dot } from "lucide-react";
 import Avatar from "./Avatar";
 
 
@@ -26,30 +26,50 @@ function formatRelativeTime(date: Date | null) {
 function Card({
     id,
     title,
-    label,
+    flag,
     description,
+    priority,
     assignee,
     dueDate
 }: CardProps) {
     const { ref } = useDraggable({ id });
+    const priorityStyles = {
+        Low: "bg-slate-100 text-slate-600",
+        Med: "bg-blue-100 text-blue-700",
+        High: "bg-orange-100 text-orange-700",
+        Urgent: "bg-red-100 text-red-700",
+    };
 
     return (
         <div
             ref={ref}
             className="flex flex-col gap-1 p-3 bg-white rounded-lg shadow"
         >
-            <div>
-               {label && (
-                    <div className={`text-xs p-2 rounded-sm w-fit font-semibold ${labelColors[label]}`}>
-                        {label.toLocaleUpperCase()}
+            <div className="flex justify-between">
+               {flag && (
+                    <div className={`text-xs p-2 rounded-sm w-fit font-semibold ${flag in labelColors ? labelColors[flag as keyof typeof labelColors] : "bg-gray-100 text-gray-700"}`}>
+                        {flag.toLocaleUpperCase()}
                     </div>
                 )} 
+
+                {priority && (
+                <div
+                    className={`flex items-center justify-between  rounded px-1 text-xs font-medium ${
+                    priorityStyles[priority as keyof typeof priorityStyles]
+                    }`}
+                >
+                    <Dot size={30} />
+                    {priority}
+                </div>
+                )}
             </div>
             
 
             <h1 className="text-lg font-semibold text-gray-800">
                 {title}
             </h1>
+
+            
 
             {description && (
                 <p className="text-md text-gray-600">

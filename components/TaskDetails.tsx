@@ -1,9 +1,9 @@
 import React from 'react'
 import Section from './Section'
-import { TAGS, type Label } from '@/types/cardTypes';
+import { PRIORITIES, Priority, TAGS, type Label } from '@/types/cardTypes';
 import { TASK_STATUS_OPTIONS, type TaskStatus } from '@/types/task';
 
-function TaskDetails({title, setTitle, status, setStatus, priority, setPriority, selectedTag, setSelectedTag}: {title: string; setTitle: (title: string) => void; status: TaskStatus; setStatus: (status: TaskStatus) => void; priority: string; setPriority: (priority: string) => void; selectedTag: Label | undefined; setSelectedTag: (tag: Label) => void}) {
+function TaskDetails({title, setTitle, status, setStatus, priority, setPriority, selectedTag, setSelectedTag}: {title: string; setTitle: (title: string) => void; status: TaskStatus; setStatus: (status: TaskStatus) => void; priority: Priority; setPriority: (priority: Priority) => void; selectedTag: Label | undefined; setSelectedTag: (tag: Label) => void}) {
   return (
     <Section number={1} title="Task Details">
             <div className="flex flex-col gap-4">
@@ -42,7 +42,7 @@ function TaskDetails({title, setTitle, status, setStatus, priority, setPriority,
                     Priority Rating
                   </label>
                   <div className="flex rounded-lg border border-slate-200 overflow-hidden text-xs font-medium">
-                    {["Low", "Med", "High", "Urgent"].map((p) => (
+                    {PRIORITIES.map((p) => (
                       <button
                         key={p}
                         type='button'

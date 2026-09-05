@@ -9,7 +9,7 @@ import TaskDetails from "@/components/TaskDetails";
 import TaskDescription from "@/components/TaskDescription";
 import AssigTimeAndUser from "@/components/AssigTimeAndUser";
 
-import type { Label } from "@/types/cardTypes";
+import { Priority, type Label } from "@/types/cardTypes";
 import type { TaskStatus, TaskUser } from "@/types/task";
 
 import { createTask } from "@/libs/api/tasks";
@@ -19,7 +19,7 @@ export default function AddTask() {
 
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState<TaskStatus>("TODO");
-  const [priority, setPriority] = useState("");
+  const [priority, setPriority] = useState<Priority>("Low");
   const [selectedTag, setSelectedTag] = useState<Label | undefined>();
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState<TaskUser | undefined>();
@@ -56,6 +56,8 @@ export default function AddTask() {
       await createTask({
         title: title.trim(),
         description: description.trim(),
+        priority,
+        flag: selectedTag,
         status,
         assignee: assignee._id,
         dueDate: dueDate || undefined,
@@ -180,8 +182,9 @@ export default function AddTask() {
             <Card
               id={1}
               title={title}
-              label={selectedTag}
+              flag={selectedTag}
               description={description}
+              priority={priority}
               assignee={assignee}
               dueDate={dueDate ? new Date(dueDate) : null}
             />

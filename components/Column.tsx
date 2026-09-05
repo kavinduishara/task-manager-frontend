@@ -22,7 +22,10 @@ function Column({ id, title, cards }: { id: TaskStatus; title: string; cards: Ta
             key={card._id} 
             id={card._id} 
             title={card.title} 
+            flag={card.flag}
             description={card.description} 
+            priority={card.priority}
+            status={card.status}
             assignee={card.assignee} 
             dueDate={card.dueDate ? new Date(card.dueDate) : null}
           />

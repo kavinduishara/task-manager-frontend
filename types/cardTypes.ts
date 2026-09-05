@@ -9,7 +9,10 @@ export const TAGS = [
   "bug",
 ] as const;
 
+export const PRIORITIES = ["Low", "Med", "High", "Urgent"] as const;
+
 export type Label = (typeof TAGS)[number];
+export type Priority = (typeof PRIORITIES)[number];
 
 export interface CardAssignee {
   name: string;
@@ -20,8 +23,9 @@ export interface CardAssignee {
 export interface CardProps {
   id: string | number;
   title: string;
-  label?: Label;
+  flag?: Label;
   description?: string;
+  priority?: Priority;
   assignee?: CardAssignee | null;
   dueDate?: Date | null;
 }

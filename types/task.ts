@@ -16,6 +16,8 @@ export interface Task {
   _id: string;
   title: string;
   description: string;
+  priority: string;
+  flag: string;
   status: TaskStatus;
   creator: TaskUser;
   assignee: TaskUser | null;
@@ -54,6 +56,8 @@ export interface TaskMutationResponse {
 export interface CreateTaskInput {
   title: string;
   description: string;
+  priority: string;
+  flag?: string;
   status: TaskStatus;
   assignee?: string;
   dueDate?: string;
