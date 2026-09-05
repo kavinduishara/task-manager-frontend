@@ -45,6 +45,7 @@ function TaskDetails({title, setTitle, status, setStatus, priority, setPriority,
                     {["Low", "Med", "High", "Urgent"].map((p) => (
                       <button
                         key={p}
+                        type='button'
                         onClick={() => setPriority(p)}
                         className={`flex-1 py-2.5 transition-colors ${
                           priority === p

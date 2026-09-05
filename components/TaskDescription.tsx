@@ -6,6 +6,7 @@ function TaskDescription({description, setDescription}: {description: string; se
     <Section number={2} title="Description & Specifications">
         <div className="rounded-lg border border-slate-200 overflow-hidden">
             <textarea
+            required
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Describe key acceptance criteria, architectural context, or technical notes..."

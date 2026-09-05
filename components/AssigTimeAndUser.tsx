@@ -1,68 +1,42 @@
 import { useEffect, useState } from "react";
-import Section from "./Section";
 import { Check } from "lucide-react";
-import { getAllUsers } from "@/libs/api/users";
-import { TaskUser } from "@/types/task";
+import Section from "./Section";
 import Avatar from "./Avatar";
-
-// const assignees = [
-//   {
-//     name: "Alice Johnson",
-//     profilePicture: "https://randomuser.me/api/portraits/women/1.jpg",
-//   },
-//   {
-//     name: "Bob Smith",
-//     profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
-//   },
-//   {
-//     name: "Charlie Brown",
-//     profilePicture: "https://randomuser.me/api/portraits/men/3.jpg",
-//   },
-//   {
-//     name: "David Wilson",
-//     profilePicture: "https://randomuser.me/api/portraits/men/4.jpg",
-//   },
-//   {
-//     name: "Eva Davis",
-//     profilePicture: "https://randomuser.me/api/portraits/women/5.jpg",
-//   },
-//   {
-//     name: "Frank Miller",
-//     profilePicture: "https://randomuser.me/api/portraits/men/6.jpg",
-//   },
-//   {
-//     name: "Grace Lee",
-//     profilePicture: "https://randomuser.me/api/portraits/women/7.jpg",
-//   },
-// ];
+import { getAllUsers } from "@/libs/api/users";
+import type { TaskUser } from "@/types/task";
 
 function AssigTimeAndUser({
   dueDate,
   setDueDate,
+  assignee,
+  setAssignee,
 }: {
   dueDate: string;
   setDueDate: (date: string) => void;
+  assignee:TaskUser|undefined;
+  setAssignee: (assignee: TaskUser) => void;
 }) {
-  const [selectedAssignee, setSelectedAssignee] = useState("");
+  const [assignees, setAssignees] = useState<TaskUser[]>([]);
   const [showList, setShowList] = useState(false);
-  const [assignees,setAssignees]=useState<TaskUser[]>([])
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    async function fetchUsers() {
       try {
         const users = await getAllUsers();
-        setAssignees(users)
+        setAssignees(users);
       } catch (error) {
-        console.error("Fetching tasks failed:", error);
+        console.error("Fetching users failed:", error);
       }
-    };
+    }
 
-    fetchTasks();
+    fetchUsers();
   }, []);
 
-  const selectedUser = assignees.find(
-    (assignee) => assignee.name === selectedAssignee
-  );
+
+  const handleSelectAssignee = (assignee: TaskUser) => {
+    setAssignee(assignee);
+    setShowList(false);
+  };
 
   return (
     <Section number={3} title="Assignment & Timeline">
@@ -73,18 +47,16 @@ function AssigTimeAndUser({
             Assignee
           </label>
 
-          {/* Selector */}
           <button
             type="button"
             onClick={() => setShowList((prev) => !prev)}
             className="w-full flex items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none hover:border-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
           >
             <div className="flex items-center gap-2">
-              {selectedUser ? (
+              {assignee ? (
                 <>
-                  <Avatar user={selectedUser}/>
-
-                  <span>{selectedUser.name}</span>
+                  <Avatar user={assignee} />
+                  <span>{assignee.name}</span>
                 </>
               ) : (
                 <span className="text-slate-400">
@@ -94,22 +66,17 @@ function AssigTimeAndUser({
             </div>
           </button>
 
-          {/* Dropdown */}
           {showList && (
-            <div className="absolute z-20 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden">
+            <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
               <div className="max-h-60 overflow-y-auto py-1">
-                {assignees.map((assignee) => {
-                  const isSelected =
-                    selectedAssignee === assignee.name;
+                {assignees.map((user) => {
+                  const isSelected =user===assignee
 
                   return (
                     <button
-                      key={assignee.name}
+                      key={user._id}
                       type="button"
-                      onClick={() => {
-                        setSelectedAssignee(assignee.name);
-                        setShowList(false);
-                      }}
+                      onClick={() => handleSelectAssignee(user)}
                       className={`w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors ${
                         isSelected
                           ? "bg-indigo-50"
@@ -117,22 +84,21 @@ function AssigTimeAndUser({
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-
-                        <Avatar user={assignee}/>
+                        <Avatar user={user} />
 
                         <span
                           className={`text-sm ${
                             isSelected
-                              ? "text-indigo-700 font-medium"
+                              ? "font-medium text-indigo-700"
                               : "text-slate-700"
                           }`}
                         >
-                          {assignee.name}
+                          {user.name}
                         </span>
                       </div>
 
                       {isSelected && (
-                        <span className="text-indigo-600 text-sm">
+                        <span className="text-indigo-600">
                           <Check size={16} />
                         </span>
                       )}
@@ -152,6 +118,7 @@ function AssigTimeAndUser({
 
           <input
             type="date"
+            required
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
             className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
