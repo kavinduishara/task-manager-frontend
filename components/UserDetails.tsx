@@ -4,6 +4,11 @@ import { ArrowRight, CheckSquare, LogOut, User } from "lucide-react";
 import UserHeader from "./UserHeader";
 import UserStats from "./UserStats";
 import { logout } from "@/libs/api/auth";
+import { useEffect, useState } from "react";
+import { getMyDetails } from "@/libs/api/users";
+import { Task } from "@/types/user";
+import type { UserDetails } from '@/types/user';
+
 
 
 function MenuItem({ icon: Icon, label, onClick,children,color }: { icon: React.ComponentType<{ className?: string }>; label: string; onClick?: () => void; children?: React.ReactNode; color?: string }) {
@@ -37,15 +42,32 @@ function UserDetails() {
       console.error("Logout failed:", error);
     }
   };
+  const [user,setUser]=useState<UserDetails>()
+  const [tasks,setTasks]=useState<Task[]>()
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const details = await getMyDetails();
+
+        setUser(details.user);
+        setTasks(details.tasks);
+      } catch (error) {
+        console.error("Fetching tasks failed:", error);
+      }
+    };
+
+    fetchDetails();
+  }, []);
   
   return (
     <div className="absolute top-17 right-5 z-50 w-72 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden">
       
-        <UserHeader />
+        <UserHeader user={user}   />
 
         <UserStats
-            completedTasks={7}
-            taskCount={10}
+            completedTasks={(tasks?.filter(task=>task.status==="DONE"))?.length||0}
+            taskCount={tasks?.length||0}
         />
 
 

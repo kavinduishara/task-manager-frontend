@@ -10,7 +10,6 @@ export default function TopBar() {
   const [showUserDetails, setShowUserDetails] = useState(false);
   const pathname = usePathname() // 3. Get the current active path
 
-  // 4. Helper function to apply dynamic styles
   const getLinkStyle = (path: string) => {
     const isActive = pathname === path
     return `flex items-center gap-2 text-sm font-semibold rounded-lg px-3 py-2 transition-colors ${
@@ -19,6 +18,7 @@ export default function TopBar() {
         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50' // Styles for Inactive links
     }`
   }
+
 
   return (
     <div className="w-full bg-white sticky top-0 z-50 shadow-sm">

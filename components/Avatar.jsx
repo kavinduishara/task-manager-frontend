@@ -1,7 +1,7 @@
 import React from 'react'
 
 function Avatar({ user }) {
-    const splitedName=user.name?.split(' ')
+    const splitedName=user?.name?.split(' ')
   return (
     <>
         <div className="flex items-center gap-2">
