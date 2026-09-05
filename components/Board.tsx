@@ -2,7 +2,7 @@
 import { DragDropProvider } from '@dnd-kit/react';
 import Column from "./Column";
 import type { TaskColumn, TaskStatus } from "@/types/task";
-import { updateTask } from '@/libs/api/tasks';
+import { updateTask, updateTaskStatus } from '@/libs/api/tasks';
 
 const STATUS_MAP: Record<string, TaskStatus> = {
     "todo-column": "TODO",
@@ -55,7 +55,7 @@ function Board({ data, onChange }: BoardProps) {
         try {
             console.log(targetColumnId)
             console.log(sourceCardId, targetColumnId)
-            await updateTask(sourceCardId, {"status":targetColumnId});
+            await updateTaskStatus(sourceCardId, targetColumnId);
         } catch (error) {
             console.error("Failed to sync drag status with backend:", error);
             // 5. Rollback UI if network fails

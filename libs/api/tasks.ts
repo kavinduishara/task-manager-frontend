@@ -5,6 +5,7 @@ import type {
   GetTasksResponse,
   Task,
   TaskMutationResponse,
+  TaskStatus,
   UpdateTaskInput,
 } from "@/types/task";
 
@@ -37,6 +38,20 @@ export async function updateTask(
 
   return response.data.task;
 }
+
+
+export async function updateTaskStatus(
+  id: string,
+  status: TaskStatus
+): Promise<Task> {
+  const response = await api.patch<TaskMutationResponse>(
+    `/tasks/status/${id}`,
+    {status}
+  );
+
+  return response.data.task;
+}
+
 
 export async function deleteTask(id: string) {
   const response = await api.delete(`/tasks/${id}`);
