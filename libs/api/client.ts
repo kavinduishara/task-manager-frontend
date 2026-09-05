@@ -1,23 +1,20 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import axios from "axios";
 
-export async function apiFetch<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      window.location.href = "/login";
+    }
 
-    throw new Error(error.message || "Something went wrong");
+    return Promise.reject(error);
   }
-
-  return response.json() as Promise<T>;
-}
+);

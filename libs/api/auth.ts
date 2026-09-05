@@ -1,13 +1,12 @@
-import { apiFetch } from "./client";
+import { api } from "./client";
 
 export async function login(email: string, password: string) {
-  return apiFetch("/auth/login", {
-    method: "POST",
-    body: JSON.stringify({
-      email,
-      password,
-    }),
+  const response = await api.post("/auth/login", {
+    email,
+    password,
   });
+
+  return response.data;
 }
 
 export async function register(
@@ -15,18 +14,17 @@ export async function register(
   email: string,
   password: string
 ) {
-  return apiFetch("/auth/register", {
-    method: "POST",
-    body: JSON.stringify({
-      name,
-      email,
-      password,
-    }),
+  const response = await api.post("/auth/register", {
+    name,
+    email,
+    password,
   });
+
+  return response.data;
 }
 
 export async function logout() {
-  return apiFetch("/auth/logout", {
-    method: "POST",
-  });
+  const response = await api.post("/auth/logout");
+
+  return response.data;
 }

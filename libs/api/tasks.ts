@@ -1,4 +1,4 @@
-import { apiFetch } from "./client";
+import { api } from "./client";
 import type {
   CreateTaskInput,
   GetTaskResponse,
@@ -9,40 +9,37 @@ import type {
 } from "@/types/task";
 
 export async function getTasks(): Promise<Task[]> {
-  const data = await apiFetch<GetTasksResponse>("/tasks");
+  const response = await api.get<GetTasksResponse>("/tasks");
 
-  return data.data;
+  return response.data.data;
 }
 
 export async function getTask(id: string): Promise<Task> {
-  const data = await apiFetch<GetTaskResponse>(`/tasks/${id}`);
+  const response = await api.get<GetTaskResponse>(`/tasks/${id}`);
 
-  return data.data;
+  return response.data.data;
 }
 
 export async function createTask(task: CreateTaskInput): Promise<Task> {
-  const data = await apiFetch<TaskMutationResponse>("/tasks", {
-    method: "POST",
-    body: JSON.stringify(task),
-  });
+  const response = await api.post<TaskMutationResponse>("/tasks", task);
 
-  return data.task;
+  return response.data.task;
 }
 
 export async function updateTask(
   id: string,
   task: UpdateTaskInput
 ): Promise<Task> {
-  const data = await apiFetch<TaskMutationResponse>(`/tasks/${id}`, {
-    method: "PATCH",
-    body: JSON.stringify(task),
-  });
+  const response = await api.patch<TaskMutationResponse>(
+    `/tasks/${id}`,
+    task
+  );
 
-  return data.task;
+  return response.data.task;
 }
 
 export async function deleteTask(id: string) {
-  return apiFetch(`/tasks/${id}`, {
-    method: "DELETE",
-  });
+  const response = await api.delete(`/tasks/${id}`);
+
+  return response.data;
 }
