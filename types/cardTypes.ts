@@ -26,6 +26,7 @@ export interface CardProps {
   flag?: Label;
   description?: string;
   priority?: Priority;
+  status?: string;
   assignee?: CardAssignee | null;
   dueDate?: Date | null;
 }

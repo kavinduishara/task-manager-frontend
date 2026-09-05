@@ -1,14 +1,26 @@
-'use client' // 1. Mark as a Client Component to use hooks
+'use client'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation' // 2. Import usePathname
 import { LayoutDashboard, Plus, Search, User2, Users2 } from "lucide-react";
 import UserDetails from './UserDetails';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function TopBar() {
   const [showUserDetails, setShowUserDetails] = useState(false);
+  const topBarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname() // 3. Get the current active path
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!topBarRef.current?.contains(event.target as Node)) {
+        setShowUserDetails(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
 
   const getLinkStyle = (path: string) => {
     const isActive = pathname === path
@@ -21,15 +33,15 @@ export default function TopBar() {
 
 
   return (
-    <div className="w-full bg-white sticky top-0 z-50 shadow-sm">
+    <div ref={topBarRef} className="w-full bg-white sticky top-0 z-50 shadow-sm">
       <div className="flex items-center h-16 px-6 border-b border-gray-200 justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/" className={getLinkStyle('/')}>
+          <Link href="/" onClick={() => setShowUserDetails(false)} className={getLinkStyle('/')}>
             <LayoutDashboard size={16} />
             <span>Boards</span>
           </Link>
 
-          <Link href="/team" className={getLinkStyle('/team')}>
+          <Link href="/team" onClick={() => setShowUserDetails(false)} className={getLinkStyle('/team')}>
             <Users2 size={16} />
             <span>Team</span>
           </Link>
@@ -41,6 +53,7 @@ export default function TopBar() {
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           />
           <input
+            onFocus={() => setShowUserDetails(false)}
             type="text"
             placeholder="Search tasks, boards..."
             className="w-full h-9 pl-9 pr-4 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition"
@@ -48,7 +61,7 @@ export default function TopBar() {
         </div>
           
         <div className="flex items-center gap-2 w-56 justify-end shrink-0">
-          <Link href="/task" className="flex items-center gap-2 text-sm font-bold text-white bg-blue-900 rounded-lg px-3 py-2">
+          <Link href="/task" onClick={() => setShowUserDetails(false)} className="flex items-center gap-2 text-sm font-bold text-white bg-blue-900 rounded-lg px-3 py-2">
             <Plus size={16} />
             <span>Add Card</span>
           </Link>
