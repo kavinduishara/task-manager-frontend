@@ -48,7 +48,7 @@ export default function TopBar() {
         </div>
           
         <div className="flex items-center gap-2 w-56 justify-end shrink-0">
-          <Link href="/newtask" className="flex items-center gap-2 text-sm font-bold text-white bg-blue-900 rounded-lg px-3 py-2">
+          <Link href="/task" className="flex items-center gap-2 text-sm font-bold text-white bg-blue-900 rounded-lg px-3 py-2">
             <Plus size={16} />
             <span>Add Card</span>
           </Link>

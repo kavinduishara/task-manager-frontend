@@ -1,3 +1,5 @@
+import { Label, Priority } from "./cardTypes";
+
 export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
 
 export const TASK_STATUS_OPTIONS = [
@@ -16,8 +18,8 @@ export interface Task {
   _id: string;
   title: string;
   description: string;
-  priority: string;
-  flag: string;
+  priority: Priority;
+  flag: Label;
   status: TaskStatus;
   creator: TaskUser;
   assignee: TaskUser | null;

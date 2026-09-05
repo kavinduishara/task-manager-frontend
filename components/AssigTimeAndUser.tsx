@@ -13,7 +13,7 @@ function AssigTimeAndUser({
 }: {
   dueDate: string;
   setDueDate: (date: string) => void;
-  assignee:TaskUser|undefined;
+  assignee:TaskUser|undefined|null;
   setAssignee: (assignee: TaskUser) => void;
 }) {
   const [assignees, setAssignees] = useState<TaskUser[]>([]);

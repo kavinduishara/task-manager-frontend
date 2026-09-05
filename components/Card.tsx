@@ -2,6 +2,8 @@ import { labelColors, type CardProps } from "@/types/cardTypes";
 import { useDraggable } from "@dnd-kit/react";
 import { Clock, Dot } from "lucide-react";
 import Avatar from "./Avatar";
+import { useRouter } from "next/navigation";
+
 
 
 function formatRelativeTime(date: Date | null) { 
@@ -32,6 +34,7 @@ function Card({
     assignee,
     dueDate
 }: CardProps) {
+    const router = useRouter();
     const { ref } = useDraggable({ id });
     const priorityStyles = {
         Low: "bg-slate-100 text-slate-600",
@@ -44,6 +47,7 @@ function Card({
         <div
             ref={ref}
             className="flex flex-col gap-1 p-3 bg-white rounded-lg shadow"
+            onClick={() => router.push(`/task/${id}`)}
         >
             <div className="flex justify-between">
                {flag && (

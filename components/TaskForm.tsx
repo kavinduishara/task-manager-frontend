@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LayoutDashboard } from "lucide-react";
 
@@ -12,9 +12,17 @@ import AssigTimeAndUser from "@/components/AssigTimeAndUser";
 import { Priority, type Label } from "@/types/cardTypes";
 import type { TaskStatus, TaskUser } from "@/types/task";
 
-import { createTask } from "@/libs/api/tasks";
+import {
+  createTask,
+  getTask,
+  updateTask,
+} from "@/libs/api/tasks";
 
-export default function AddTask() {
+export default function TaskForm({
+  taskId,
+}: {
+  taskId?: string;
+}) {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
@@ -22,12 +30,55 @@ export default function AddTask() {
   const [priority, setPriority] = useState<Priority>("Low");
   const [selectedTag, setSelectedTag] = useState<Label | undefined>();
   const [description, setDescription] = useState("");
-  const [assignee, setAssignee] = useState<TaskUser | undefined>();
+  const [assignee, setAssignee] = useState<TaskUser | null | undefined>();
   const [dueDate, setDueDate] = useState("");
 
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const isEditMode = Boolean(taskId);
+
+  // --------------------------------
+  // Fetch task when editing
+  // --------------------------------
+  useEffect(() => {
+    if (!taskId) return;
+
+    const fetchTask = async () => {
+      try {
+        setIsLoading(true);
+        setError("");
+
+        const task = await getTask(taskId);
+
+        setTitle(task.title);
+        setDescription(task.description);
+        setStatus(task.status);
+        setPriority(task.priority);
+        setSelectedTag(task.flag);
+        setAssignee(task.assignee);
+
+        if (task.dueDate) {
+          setDueDate(task.dueDate.split("T")[0]);
+        } else {
+          setDueDate("");
+        }
+      } catch (error) {
+        console.error("Fetching task failed:", error);
+
+        setError("Failed to load task");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTask();
+  }, [taskId]);
+
+  // --------------------------------
+  // Submit
+  // --------------------------------
   const handleTaskSubmission = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -50,10 +101,15 @@ export default function AddTask() {
       return;
     }
 
+    if (!selectedTag) {
+      setError("Please select a tag");
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
-      await createTask({
+      const taskData = {
         title: title.trim(),
         description: description.trim(),
         priority,
@@ -61,26 +117,54 @@ export default function AddTask() {
         status,
         assignee: assignee._id,
         dueDate: dueDate || undefined,
-      });
+      };
 
-      // Task created successfully
+      if (isEditMode) {
+        await updateTask(taskId!, taskData);
+      } else {
+        await createTask(taskData);
+      }
+
       router.push("/");
       router.refresh();
     } catch (error) {
+      console.error("Saving task failed:", error);
+
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to create task"
+          : isEditMode
+            ? "Failed to update task"
+            : "Failed to create task"
       );
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // --------------------------------
+  // Cancel
+  // --------------------------------
   const handleCancel = () => {
     router.back();
   };
 
+  // --------------------------------
+  // Loading
+  // --------------------------------
+  if (isLoading) {
+    return (
+      <div className="flex h-[calc(100vh-4rem)] w-full items-center justify-center bg-slate-50">
+        <p className="text-sm text-slate-500">
+          Loading task...
+        </p>
+      </div>
+    );
+  }
+
+  // --------------------------------
+  // UI
+  // --------------------------------
   return (
     <div className="h-[calc(100vh-4rem)] w-full overflow-hidden bg-slate-50 p-5 font-sans text-slate-900">
       <div className="mx-auto grid h-full min-h-0 max-w-6xl grid-cols-1 gap-5 bg-slate-50 p-3 lg:grid-cols-3">
@@ -128,6 +212,8 @@ export default function AddTask() {
 
           {/* Form Actions */}
           <div className="flex shrink-0 items-center justify-between pt-5">
+
+            {/* Cancel */}
             <button
               type="button"
               onClick={handleCancel}
@@ -138,35 +224,40 @@ export default function AddTask() {
             </button>
 
             <div className="flex gap-2">
-              <button
-                type="button"
-                disabled
-                className="cursor-not-allowed rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-400"
-              >
-                Save as Draft
-              </button>
 
+
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={isSubmitting}
                 className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSubmitting ? "Creating..." : "Create Card"}
+                {isSubmitting
+                  ? isEditMode
+                    ? "Updating..."
+                    : "Creating..."
+                  : isEditMode
+                    ? "Update Task"
+                    : "Create Card"}
               </button>
+
             </div>
           </div>
         </form>
 
         {/* Preview */}
         <div className="flex min-h-0 flex-col gap-5">
+
           <div className="rounded-xl border border-slate-200 bg-white p-4">
 
             <div className="mb-3 flex items-center justify-between">
+
               <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700">
                 <LayoutDashboard
                   size={14}
                   className="text-indigo-500"
                 />
+
                 LIVE KANBAN CARD PREVIEW
               </div>
 
@@ -180,13 +271,17 @@ export default function AddTask() {
             </p>
 
             <Card
-              id={1}
+              id={taskId ?? "preview"}
               title={title}
               flag={selectedTag}
               description={description}
               priority={priority}
               assignee={assignee}
-              dueDate={dueDate ? new Date(dueDate) : null}
+              dueDate={
+                dueDate
+                  ? new Date(dueDate)
+                  : null
+              }
             />
 
           </div>
