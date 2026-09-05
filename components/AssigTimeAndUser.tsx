@@ -10,11 +10,13 @@ function AssigTimeAndUser({
   setDueDate,
   assignee,
   setAssignee,
+  isViewMode
 }: {
   dueDate: string;
   setDueDate: (date: string) => void;
   assignee:TaskUser|undefined|null;
   setAssignee: (assignee: TaskUser) => void;
+  isViewMode:boolean
 }) {
   const [assignees, setAssignees] = useState<TaskUser[]>([]);
   const [showList, setShowList] = useState(false);
@@ -32,7 +34,6 @@ function AssigTimeAndUser({
     fetchUsers();
   }, []);
 
-
   const handleSelectAssignee = (assignee: TaskUser) => {
     setAssignee(assignee);
     setShowList(false);
@@ -48,6 +49,7 @@ function AssigTimeAndUser({
           </label>
 
           <button
+            disabled={isViewMode}
             type="button"
             onClick={() => setShowList((prev) => !prev)}
             className="w-full flex items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none hover:border-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
@@ -66,7 +68,7 @@ function AssigTimeAndUser({
             </div>
           </button>
 
-          {showList && (
+          {showList && !isViewMode && (
             <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
               <div className="max-h-60 overflow-y-auto py-1">
                 {assignees.map((user) => {
@@ -117,6 +119,7 @@ function AssigTimeAndUser({
           </label>
 
           <input
+          disabled={isViewMode}
             type="date"
             required
             value={dueDate}

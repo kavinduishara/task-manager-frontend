@@ -17,6 +17,9 @@ import {
   getTask,
   updateTask,
 } from "@/libs/api/tasks";
+import { useNotification } from "./providers/NotificationProvider";
+import axios from "axios";
+import { useUserDetails } from "./providers/UserDetailsProvider";
 
 export default function TaskForm({
   taskId,
@@ -24,7 +27,9 @@ export default function TaskForm({
   taskId?: string;
 }) {
   const router = useRouter();
-
+  const { showNotification } = useNotification();
+  const { user }=useUserDetails()
+  
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState<TaskStatus>("TODO");
   const [priority, setPriority] = useState<Priority>("Low");
@@ -33,9 +38,9 @@ export default function TaskForm({
   const [assignee, setAssignee] = useState<TaskUser | null | undefined>();
   const [dueDate, setDueDate] = useState("");
 
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isViewMode, setIsViewMode] = useState(true);
 
   const isEditMode = Boolean(taskId);
 
@@ -45,10 +50,11 @@ export default function TaskForm({
   useEffect(() => {
     if (!taskId) return;
 
+    
+
     const fetchTask = async () => {
       try {
         setIsLoading(true);
-        setError("");
 
         const task = await getTask(taskId);
 
@@ -65,9 +71,9 @@ export default function TaskForm({
           setDueDate("");
         }
       } catch (error) {
-        console.error("Fetching task failed:", error);
+        console.error("Fetching task failed:", "error");
 
-        setError("Failed to load task");
+        showNotification("Failed to load task","error");
       } finally {
         setIsLoading(false);
       }
@@ -84,25 +90,24 @@ export default function TaskForm({
   ) => {
     event.preventDefault();
 
-    setError("");
 
     if (!title.trim()) {
-      setError("Title is required");
+      showNotification("Title is required","error");
       return;
     }
 
     if (!description.trim()) {
-      setError("Description is required");
+      showNotification("Description is required","error");
       return;
     }
 
     if (!assignee) {
-      setError("Please select an assignee");
+      showNotification("Please select an assignee","error");
       return;
     }
 
     if (!selectedTag) {
-      setError("Please select a tag");
+      showNotification("Please select a tag","error");
       return;
     }
 
@@ -124,19 +129,21 @@ export default function TaskForm({
       } else {
         await createTask(taskData);
       }
+      showNotification("task updated","success")
 
       router.push("/");
       router.refresh();
     } catch (error) {
       console.error("Saving task failed:", error);
 
-      setError(
-        error instanceof Error
-          ? error.message
-          : isEditMode
-            ? "Failed to update task"
-            : "Failed to create task"
-      );
+      if (axios.isAxiosError(error)) {
+          showNotification(
+          error.response?.data?.message ??
+          "Failed to update task status.","error"
+          );
+      } else {
+          showNotification("Failed to update task status.","error");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -171,7 +178,7 @@ export default function TaskForm({
 
         {/* Form */}
         <form
-          onSubmit={handleTaskSubmission}
+          onSubmit={isViewMode ? undefined : handleTaskSubmission}
           className="flex min-h-0 flex-col overflow-hidden rounded-md bg-white p-4 lg:col-span-2"
         >
           {/* Form Content */}
@@ -186,11 +193,13 @@ export default function TaskForm({
               setPriority={setPriority}
               selectedTag={selectedTag}
               setSelectedTag={setSelectedTag}
+              isViewMode={isViewMode}
             />
 
             <TaskDescription
               description={description}
               setDescription={setDescription}
+              isViewMode={isViewMode}
             />
 
             <AssigTimeAndUser
@@ -198,16 +207,8 @@ export default function TaskForm({
               setDueDate={setDueDate}
               assignee={assignee}
               setAssignee={setAssignee}
+              isViewMode={isViewMode}
             />
-
-            {error && (
-              <p
-                role="alert"
-                className="text-sm text-red-500"
-              >
-                {error}
-              </p>
-            )}
           </div>
 
           {/* Form Actions */}
@@ -229,7 +230,7 @@ export default function TaskForm({
               {/* Submit */}
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isViewMode}
                 className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting
@@ -240,6 +241,15 @@ export default function TaskForm({
                     ? "Update Task"
                     : "Create Card"}
               </button>
+              {isEditMode &&
+              <button
+                onClick={() => setIsViewMode((previous) => !previous)}
+                type="button"
+                disabled={user?.role!=="ADMIN"}
+                className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isViewMode?"Edit": "View"}
+              </button>}
 
             </div>
           </div>

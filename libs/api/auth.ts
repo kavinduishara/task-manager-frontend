@@ -1,7 +1,11 @@
+import { LoginResponse } from "@/types/user";
 import { api } from "./client";
 
-export async function login(email: string, password: string) {
-  const response = await api.post("/auth/login", {
+export async function login(
+  email: string,
+  password: string
+): Promise<LoginResponse> {
+  const response = await api.post<LoginResponse>("/auth/login", {
     email,
     password,
   });

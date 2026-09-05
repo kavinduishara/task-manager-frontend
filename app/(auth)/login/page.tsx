@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import { login } from '@/libs/api/auth';
+import { useNotification } from '@/components/providers/NotificationProvider';
+import axios from 'axios';
+import { useUserDetails } from '@/components/providers/UserDetailsProvider';
 
 export default function Login() {
   const router = useRouter();
@@ -13,18 +16,24 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
+  const { showNotification } = useNotification();
+
+  const { setUser }=useUserDetails()
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    
 
     if (!email || !password) {
       setError('Enter your email address and password to continue.');
       return;
     }
 
-    setError('');
-
     try {
       const data = await login(email, password);
+
+      setUser(data.user)
 
       console.log(data);
 
@@ -32,11 +41,14 @@ export default function Login() {
     } catch (error) {
       console.error(error);
 
-      setError(
-        error instanceof Error
-          ? error.message
-          : 'Invalid email or password.'
-      );
+      if (axios.isAxiosError(error)) {
+          showNotification(
+          error.response?.data?.message ??
+          "Failed to update task status.","error"
+          );
+      } else {
+          showNotification("Failed to update task status.","error");
+      }
     }
   }
 

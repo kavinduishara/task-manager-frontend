@@ -1,11 +1,12 @@
 import React from 'react'
 import Section from './Section'
 
-function TaskDescription({description, setDescription}: {description: string; setDescription: (desc: string) => void}) {
+function TaskDescription({description, setDescription,isViewMode}: {description: string; setDescription: (desc: string) => void;isViewMode: boolean}) {
   return (
     <Section number={2} title="Description & Specifications">
         <div className="rounded-lg border border-slate-200 overflow-hidden">
             <textarea
+            disabled={isViewMode}
             required
             value={description}
             onChange={(e) => setDescription(e.target.value)}

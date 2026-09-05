@@ -2,7 +2,13 @@ export interface UserDetails {
   _id: string;
   name: string;
   email: string;
+  profile:string|undefined;
   role: 'ADMIN' | 'USER'; // Expand roles if you have more types
+}
+
+export interface LoginResponse {
+  message: string;
+  user: UserDetails;
 }
 
 export interface Task {

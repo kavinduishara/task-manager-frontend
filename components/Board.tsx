@@ -6,12 +6,6 @@ import { updateTaskStatus } from '@/libs/api/tasks';
 import { useNotification } from "@/components/providers/NotificationProvider";
 import axios from 'axios';
 
-const STATUS_MAP: Record<string, TaskStatus> = {
-    "todo-column": "TODO",
-    "in-progress-column": "IN_PROGRESS",
-    "done-column": "DONE"
-};
-
 interface BoardProps {
     data: TaskColumn[];
     onChange: (columns: TaskColumn[]) => void;

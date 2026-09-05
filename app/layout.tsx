@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NotificationProvider } from "@/components/providers/NotificationProvider";
+import { UserDetailsProvider } from "@/components/providers/UserDetailsProvider";
 
 
 const geistSans = Geist({
@@ -26,9 +27,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <NotificationProvider>
-          {children}
-        </NotificationProvider>
+        <UserDetailsProvider>
+          <NotificationProvider>
+            {children}
+          </NotificationProvider>
+        </UserDetailsProvider>
       </body>
     </html>
   );
