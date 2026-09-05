@@ -2,7 +2,9 @@
 import { DragDropProvider } from '@dnd-kit/react';
 import Column from "./Column";
 import type { TaskColumn, TaskStatus } from "@/types/task";
-import { updateTask, updateTaskStatus } from '@/libs/api/tasks';
+import { updateTaskStatus } from '@/libs/api/tasks';
+import { useNotification } from "@/components/providers/NotificationProvider";
+import axios from 'axios';
 
 const STATUS_MAP: Record<string, TaskStatus> = {
     "todo-column": "TODO",
@@ -16,6 +18,7 @@ interface BoardProps {
 }
 
 function Board({ data, onChange }: BoardProps) {
+    const { showNotification } = useNotification();
     
     const handleDragEnd = async (event: any) => {
         if (event.canceled) return;
@@ -50,16 +53,30 @@ function Board({ data, onChange }: BoardProps) {
 
         // 3. Update the UI state instantly so it feels responsive
         onChange(updatedColumns);
+        
 
         // 4. Fire the network request in the background
         try {
-            console.log(targetColumnId)
-            console.log(sourceCardId, targetColumnId)
             await updateTaskStatus(sourceCardId, targetColumnId);
+            showNotification("updated task status.","success");
         } catch (error) {
-            console.error("Failed to sync drag status with backend:", error);
-            // 5. Rollback UI if network fails
+            console.error(
+                "Failed to sync drag status with backend:",
+                error
+            );
+
+            // Rollback UI
             onChange(originalColumns);
+            
+
+            if (axios.isAxiosError(error)) {
+                showNotification(
+                error.response?.data?.message ??
+                "Failed to update task status.","error"
+                );
+            } else {
+                showNotification("Failed to update task status.","error");
+            }
         }
     };
 
