@@ -1,37 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Section from "./Section";
 import { Check } from "lucide-react";
+import { getAllUsers } from "@/libs/api/users";
+import { TaskUser } from "@/types/task";
+import Avatar from "./Avatar";
 
-const assignees = [
-  {
-    name: "Alice Johnson",
-    profilePicture: "https://randomuser.me/api/portraits/women/1.jpg",
-  },
-  {
-    name: "Bob Smith",
-    profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
-  },
-  {
-    name: "Charlie Brown",
-    profilePicture: "https://randomuser.me/api/portraits/men/3.jpg",
-  },
-  {
-    name: "David Wilson",
-    profilePicture: "https://randomuser.me/api/portraits/men/4.jpg",
-  },
-  {
-    name: "Eva Davis",
-    profilePicture: "https://randomuser.me/api/portraits/women/5.jpg",
-  },
-  {
-    name: "Frank Miller",
-    profilePicture: "https://randomuser.me/api/portraits/men/6.jpg",
-  },
-  {
-    name: "Grace Lee",
-    profilePicture: "https://randomuser.me/api/portraits/women/7.jpg",
-  },
-];
+// const assignees = [
+//   {
+//     name: "Alice Johnson",
+//     profilePicture: "https://randomuser.me/api/portraits/women/1.jpg",
+//   },
+//   {
+//     name: "Bob Smith",
+//     profilePicture: "https://randomuser.me/api/portraits/men/2.jpg",
+//   },
+//   {
+//     name: "Charlie Brown",
+//     profilePicture: "https://randomuser.me/api/portraits/men/3.jpg",
+//   },
+//   {
+//     name: "David Wilson",
+//     profilePicture: "https://randomuser.me/api/portraits/men/4.jpg",
+//   },
+//   {
+//     name: "Eva Davis",
+//     profilePicture: "https://randomuser.me/api/portraits/women/5.jpg",
+//   },
+//   {
+//     name: "Frank Miller",
+//     profilePicture: "https://randomuser.me/api/portraits/men/6.jpg",
+//   },
+//   {
+//     name: "Grace Lee",
+//     profilePicture: "https://randomuser.me/api/portraits/women/7.jpg",
+//   },
+// ];
 
 function AssigTimeAndUser({
   dueDate,
@@ -42,6 +45,20 @@ function AssigTimeAndUser({
 }) {
   const [selectedAssignee, setSelectedAssignee] = useState("");
   const [showList, setShowList] = useState(false);
+  const [assignees,setAssignees]=useState<TaskUser[]>([])
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const users = await getAllUsers();
+        setAssignees(users)
+      } catch (error) {
+        console.error("Fetching tasks failed:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   const selectedUser = assignees.find(
     (assignee) => assignee.name === selectedAssignee
@@ -65,11 +82,7 @@ function AssigTimeAndUser({
             <div className="flex items-center gap-2">
               {selectedUser ? (
                 <>
-                  <img
-                    src={selectedUser.profilePicture}
-                    alt={selectedUser.name}
-                    className="w-6 h-6 rounded-full"
-                  />
+                  <Avatar user={selectedUser}/>
 
                   <span>{selectedUser.name}</span>
                 </>
@@ -104,11 +117,8 @@ function AssigTimeAndUser({
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <img
-                          src={assignee.profilePicture}
-                          alt={assignee.name}
-                          className="w-7 h-7 rounded-full"
-                        />
+
+                        <Avatar user={assignee}/>
 
                         <span
                           className={`text-sm ${

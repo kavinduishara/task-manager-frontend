@@ -41,6 +41,11 @@ export interface GetTaskResponse {
   data: Task;
 }
 
+export interface GetTaskUsersResponse {
+  message: string;
+  data: TaskUser[];
+}
+
 export interface TaskMutationResponse {
   message: string;
   task: Task;
