@@ -2,7 +2,7 @@ import Avatar from "./Avatar";
 import type { UserDetails } from '@/types/user';
 
 
-function UserHeader({user}:{user?:UserDetails}) {
+function UserHeader({user}:{user:UserDetails|null}) {
   return (
     <div className="p-4 border-b border-slate-200">
       <div className="flex items-center gap-3">

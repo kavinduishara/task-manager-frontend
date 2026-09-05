@@ -1,7 +1,9 @@
 import { ApiResponseData, GetUserDetailsResponse } from "@/types/user";
 import { api } from "./client";
 import type {
-    GetTaskUsersResponse,
+  GetTasksResponse,
+  GetTaskUsersResponse,
+  Task,
   TaskUser,
 } from "@/types/task";
 
@@ -13,6 +15,11 @@ export async function getAllUsers(): Promise<TaskUser[]> {
 
 export async function getMyDetails(): Promise<ApiResponseData> {
   const response = await api.get<GetUserDetailsResponse>("/users/me");
+
+  return response.data.data;
+}
+export async function getMyTasks(): Promise<Task[]> {
+  const response = await api.get<GetTasksResponse>("/users/myTasks");
 
   return response.data.data;
 }

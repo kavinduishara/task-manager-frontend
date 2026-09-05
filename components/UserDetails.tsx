@@ -5,9 +5,10 @@ import UserHeader from "./UserHeader";
 import UserStats from "./UserStats";
 import { logout } from "@/libs/api/auth";
 import { useEffect, useState } from "react";
-import { getMyDetails } from "@/libs/api/users";
-import { Task } from "@/types/user";
+import { getMyTasks } from "@/libs/api/users";
 import type { UserDetails } from '@/types/user';
+import { Task } from "@/types/task";
+import { useUserDetails } from "./providers/UserDetailsProvider";
 
 
 
@@ -32,6 +33,9 @@ function MenuItem({ icon: Icon, label, onClick,children,color }: { icon: React.C
 function UserDetails() {
   const router = useRouter();
 
+    const { user }=useUserDetails()
+  
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -42,16 +46,13 @@ function UserDetails() {
       console.error("Logout failed:", error);
     }
   };
-  const [user,setUser]=useState<UserDetails>()
-  const [tasks,setTasks]=useState<Task[]>()
+  const [tasks,setTasks]=useState<Task[]>([])
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const details = await getMyDetails();
-
-        setUser(details.user);
-        setTasks(details.tasks);
+        const details = await getMyTasks();
+        setTasks(details);
       } catch (error) {
         console.error("Fetching tasks failed:", error);
       }

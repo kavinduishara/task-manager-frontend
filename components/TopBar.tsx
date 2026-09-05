@@ -2,15 +2,19 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation' // 2. Import usePathname
-import { LayoutDashboard, Plus, Search, User2, Users2 } from "lucide-react";
+import { LayoutDashboard, Plus, Search, Users2 } from "lucide-react";
 import UserDetails from './UserDetails';
 import { useEffect, useRef, useState } from 'react';
+import Avatar from './Avatar';
+import { useUserDetails } from './providers/UserDetailsProvider';
+import { getMyDetails } from '@/libs/api/users';
 
 export default function TopBar() {
   const [showUserDetails, setShowUserDetails] = useState(false);
   const topBarRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname() // 3. Get the current active path
 
+  const { user,setUser }=useUserDetails()
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (!topBarRef.current?.contains(event.target as Node)) {
@@ -20,6 +24,20 @@ export default function TopBar() {
 
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const details = await getMyDetails();
+
+        setUser(details.user);
+      } catch (error) {
+        console.error("Fetching tasks failed:", error);
+      }
+    };
+
+    fetchDetails();
   }, []);
 
   const getLinkStyle = (path: string) => {
@@ -66,9 +84,8 @@ export default function TopBar() {
             <span>Add Card</span>
           </Link>
           
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white text-xs font-medium ml-1" onClick={()=>setShowUserDetails(!showUserDetails)}>
-
-            <User2 size={16}/>
+          <div className="w-9 h-9 rounded-fullflex items-center justify-center" onClick={()=>setShowUserDetails(!showUserDetails)}>
+            <Avatar user={user} size={9}/>
           </div>
         </div>
 

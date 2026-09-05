@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Avatar({ user }) {
+function Avatar({ user,size=6 }) {
     const splitedName=user?.name?.split(' ')
   return (
     <>
@@ -12,7 +12,7 @@ function Avatar({ user }) {
                         />
                     )}
                     {!user?.profilePicture && user?.name && (
-                        <div className={`w-6 h-6 rounded-full font-medium ${splitedName.length===1?"text-lg":"text-md"} bg-blue-900 flex items-center justify-center text-white`}>
+                        <div className={`w-${size} h-${size} rounded-full font-medium ${splitedName.length===1?"text-lg":"text-md"} bg-blue-900 flex items-center justify-center text-white`}>
                             {splitedName[0].charAt(0).toUpperCase() + (splitedName[1]?.charAt(0).toUpperCase() || '')}
                         </div>
                     )}

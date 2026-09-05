@@ -52,7 +52,6 @@ function Board({ data, onChange }: BoardProps) {
         // 4. Fire the network request in the background
         try {
             await updateTaskStatus(sourceCardId, targetColumnId);
-            showNotification("updated task status.","success");
         } catch (error) {
             console.error(
                 "Failed to sync drag status with backend:",
