@@ -36,13 +36,15 @@ export default function TaskForm({
   const [selectedTag, setSelectedTag] = useState<Label | undefined>();
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState<TaskUser | null | undefined>();
+  const [creator, setCreator] = useState<string>();
   const [dueDate, setDueDate] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isViewMode, setIsViewMode] = useState(true);
+  
 
   const isEditMode = Boolean(taskId);
+  const [isViewMode, setIsViewMode] = useState(isEditMode);
 
   // --------------------------------
   // Fetch task when editing
@@ -64,6 +66,8 @@ export default function TaskForm({
         setPriority(task.priority);
         setSelectedTag(task.flag);
         setAssignee(task.assignee);
+        setCreator(task.assignee?._id)
+
 
         if (task.dueDate) {
           setDueDate(task.dueDate.split("T")[0]);
@@ -245,7 +249,7 @@ export default function TaskForm({
               <button
                 onClick={() => setIsViewMode((previous) => !previous)}
                 type="button"
-                disabled={user?.role!=="ADMIN"}
+                disabled={isEditMode && user?.role!=="ADMIN" && user?._id!==creator}
                 className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isViewMode?"Edit": "View"}
