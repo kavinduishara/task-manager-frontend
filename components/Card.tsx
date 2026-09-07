@@ -3,6 +3,7 @@ import { useDraggable } from "@dnd-kit/react";
 import { Clock, Dot } from "lucide-react";
 import Avatar from "./Avatar";
 import { useRouter } from "next/navigation";
+import isOverdue from "@/libs/util/checkpassdue";
 
 
 
@@ -46,7 +47,7 @@ function Card({
     return (
         <div
             ref={ref}
-            className="flex flex-col gap-1 p-3 bg-white rounded-lg shadow"
+            className={`flex flex-col gap-1 p-3 bg-white  rounded-lg shadow`}
             onClick={() => router.push(`/task/${id}`)}
         >
             <div className="flex justify-between">
@@ -90,7 +91,7 @@ function Card({
                         </span>
                     )}
                     {dueDate && (
-                    <div className="flex items-center gap-1 text-xs text-gray-400">
+                    <div className={`flex items-center gap-1 text-xs  ${isOverdue(dueDate)?"text-red-400":"text-gray-400"}`}>
                         <Clock size={16} />
                         {formatRelativeTime(dueDate ?? null)}
                     </div>

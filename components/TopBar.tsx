@@ -65,7 +65,7 @@ export default function TopBar() {
           </Link>
         </div>
 
-        <div className="relative w-full max-w-md">
+        {/* <div className="relative w-full max-w-md">
           <Search
             size={16}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -76,7 +76,7 @@ export default function TopBar() {
             placeholder="Search tasks, boards..."
             className="w-full h-9 pl-9 pr-4 rounded-lg bg-gray-50 border border-gray-200 text-sm text-gray-700 placeholder-gray-400 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition"
           />
-        </div>
+        </div> */}
           
         <div className="flex items-center gap-2 w-56 justify-end shrink-0">
           <Link href="/task" onClick={() => setShowUserDetails(false)} className="flex items-center gap-2 text-sm font-bold text-white bg-blue-900 rounded-lg px-3 py-2">
