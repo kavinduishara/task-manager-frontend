@@ -36,7 +36,7 @@ const notificationProgressStyles: Record<NotificationType, string> = {
 };
 
 const NOTIFICATION_DURATION = 4000;
-const ANIMATION_DURATION = 3000;
+const ANIMATION_DURATION = 300;
 
 export default function NotificationCard({
   message,
