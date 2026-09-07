@@ -4,6 +4,7 @@ import Section from "./Section";
 import Avatar from "./Avatar";
 import { getAllUsers } from "@/libs/api/users";
 import type { TaskUser } from "@/types/task";
+import { UserDetails } from "@/types/user";
 
 function AssigTimeAndUser({
   dueDate,
@@ -18,7 +19,7 @@ function AssigTimeAndUser({
   setAssignee: (assignee: TaskUser) => void;
   isViewMode:boolean
 }) {
-  const [assignees, setAssignees] = useState<TaskUser[]>([]);
+  const [assignees, setAssignees] = useState<UserDetails[]>([]);
   const [showList, setShowList] = useState(false);
 
   useEffect(() => {

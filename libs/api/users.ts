@@ -1,14 +1,14 @@
-import { ApiResponseData, GetUserDetailsResponse } from "@/types/user";
+import {
+  ApiResponseData,
+  GetUserDetailsResponse,
+  GetUsersResponse,
+  UserDetails,
+} from "@/types/user";
 import { api } from "./client";
-import type {
-  GetTasksResponse,
-  GetTaskUsersResponse,
-  Task,
-  TaskUser,
-} from "@/types/task";
+import type { GetTasksResponse, Task } from "@/types/task";
 
-export async function getAllUsers(): Promise<TaskUser[]> {
-  const response = await api.get<GetTaskUsersResponse>("/users");
+export async function getAllUsers(): Promise<UserDetails[]> {
+  const response = await api.get<GetUsersResponse>("/users");
 
   return response.data.data;
 }

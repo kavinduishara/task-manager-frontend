@@ -5,6 +5,7 @@ import { getTasks } from "@/libs/api/tasks";
 import { getAllUsers } from "@/libs/api/users";
 import { type Label, type Priority } from "@/types/cardTypes";
 import type { Task, TaskColumn, TaskUser } from "@/types/task";
+import { UserDetails } from "@/types/user";
 import { useEffect, useMemo, useState } from "react";
 
 function makeColumns(tasks: Task[]): TaskColumn[] {
@@ -29,7 +30,7 @@ function makeColumns(tasks: Task[]): TaskColumn[] {
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [users, setUsers] = useState<TaskUser[]>([]);
+  const [users, setUsers] = useState<UserDetails[]>([]);
   const [query, setQuery] = useState("");
   const [label, setLabel] = useState<Label | "">("");
   const [priority, setPriority] = useState<Priority | "">("");

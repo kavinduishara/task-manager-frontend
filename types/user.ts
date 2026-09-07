@@ -20,3 +20,8 @@ export interface GetUserDetailsResponse {
   message: string;
   data: ApiResponseData;
 }
+
+export interface GetUsersResponse {
+  message: string;
+  data: UserDetails[];
+}
