@@ -9,6 +9,8 @@ import { getMyTasks } from "@/libs/api/users";
 import type { UserDetails } from '@/types/user';
 import { Task } from "@/types/task";
 import { useUserDetails } from "./providers/UserDetailsProvider";
+import { useNotification } from "./providers/NotificationProvider";
+import axios from "axios";
 
 
 
@@ -34,16 +36,28 @@ function UserDetails() {
   const router = useRouter();
 
     const { user }=useUserDetails()
+    const { showNotification } = useNotification();
+    
   
 
   const handleLogout = async () => {
     try {
-      await logout();
+      const data=await logout();
+
+      showNotification(data.message,"success");
 
       router.push("/login");
       router.refresh();
     } catch (error) {
       console.error("Logout failed:", error);
+      if (axios.isAxiosError(error)) {
+          showNotification(
+          error.response?.data?.message ??
+          "Failed to logout","error"
+          );
+      } else {
+          showNotification("Failed to logout.","error");
+      }
     }
   };
   const [tasks,setTasks]=useState<Task[]>([])
