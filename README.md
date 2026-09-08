@@ -2,6 +2,12 @@
 
 TaskFlow is a task-management web application built with Next.js, React, TypeScript, and Tailwind CSS. It provides authenticated users with a dashboard for viewing and updating tasks, task creation and detail views, team-member information, and user account details.
 
+## Technology Stack
+
+- Frontend  :Next.js
+- Backend   :Express.js
+- Database  :MongoDB
+
 ## Prerequisites
 
 - Node.js 20.9 or later
