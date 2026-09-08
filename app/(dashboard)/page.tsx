@@ -7,6 +7,7 @@ import { type Label, type Priority } from "@/types/cardTypes";
 import type { Task, TaskColumn, TaskUser } from "@/types/task";
 import { UserDetails } from "@/types/user";
 import { useEffect, useMemo, useState } from "react";
+import PageLoader from "@/components/PageLoader";
 
 function makeColumns(tasks: Task[]): TaskColumn[] {
   return [
@@ -36,6 +37,7 @@ export default function Dashboard() {
   const [priority, setPriority] = useState<Priority | "">("");
   const [assignee, setAssignee] = useState("");
   const [dueDateSort, setDueDateSort] = useState<"asc" | "desc" | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -45,6 +47,8 @@ export default function Dashboard() {
         setUsers(userData);
       } catch (error) {
         console.error("Fetching dashboard data failed:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -71,6 +75,10 @@ export default function Dashboard() {
   }, [tasks, query, label, priority, assignee, dueDateSort]);
 
   const columnData = useMemo(() => makeColumns(visibleTasks), [visibleTasks]);
+
+  if (isLoading) {
+    return <PageLoader label="Loading task board..." />;
+  }
 
   function handleBoardChange(updatedColumns: TaskColumn[]) {
     const statusByTaskId = new Map(

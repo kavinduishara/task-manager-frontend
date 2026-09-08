@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { CheckSquare, Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
+import { CheckSquare, Eye, EyeOff, Loader2, LockKeyhole, Mail } from 'lucide-react';
 import { login } from '@/libs/api/auth';
 import { useNotification } from '@/components/providers/NotificationProvider';
 import axios from 'axios';
@@ -15,6 +15,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { showNotification } = useNotification();
 
@@ -29,6 +30,8 @@ export default function Login() {
       setError('Enter your email address and password to continue.');
       return;
     }
+
+    setIsSubmitting(true);
 
     try {
       const data = await login(email, password);
@@ -50,6 +53,8 @@ export default function Login() {
       } else {
           showNotification("Failed to log in.","error");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -76,7 +81,10 @@ export default function Login() {
                 <div className="relative"><LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} /><input id="password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" className="w-full rounded-lg border border-slate-200 py-2.5 pr-10 pl-10 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100" /><button type="button" onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
               </div>
               {error && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
-              <button type="submit" className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200">Sign in</button>
+              <button type="submit" disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-60">
+                {isSubmitting && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+                {isSubmitting ? 'Signing in...' : 'Sign in'}
+              </button>
             </form>
             <p className="mt-8 text-center text-sm text-slate-500">New to TaskFlow? <Link href="/signup" className="font-semibold text-indigo-600 hover:text-indigo-700">Create an account</Link></p>
           </div>

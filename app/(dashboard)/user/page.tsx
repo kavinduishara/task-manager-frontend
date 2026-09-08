@@ -7,10 +7,12 @@ import TaskDistributionCard from "@/components/TaskDistributionCard";
 import { getMyDetails, getMyTasks } from "@/libs/api/users";
 import { Task } from "@/types/task";
 import { UserDetails } from "@/types/user";
+import PageLoader from "@/components/PageLoader";
 
 export default function UserProfilePage() {
   const [user, setUser] = useState<UserDetails>();
   const [userTasks, setUserTasks] = useState<Task[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -24,6 +26,8 @@ export default function UserProfilePage() {
         setUserTasks(tasks);
       } catch (error) {
         console.error("Fetching profile data failed:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -44,6 +48,10 @@ export default function UserProfilePage() {
       { complete: [], incomplete: [] }
     );
   }, [userTasks]);
+
+  if (isLoading) {
+    return <PageLoader label="Loading profile data..." />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50/50 p-6 md:p-8 flex flex-col lg:flex-row gap-8">

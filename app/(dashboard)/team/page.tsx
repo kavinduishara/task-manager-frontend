@@ -7,6 +7,7 @@ import { getTasks } from "@/libs/api/tasks";
 import { getAllUsers } from "@/libs/api/users";
 import { Task, TaskUser } from "@/types/task";
 import { UserDetails } from "@/types/user";
+import PageLoader from "@/components/PageLoader";
 import { CheckCircle, Clipboard, Target, Users2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -75,7 +76,7 @@ export default function TeamDirectoryPage() {
   }, [users, searchQuery]);
 
   if (isLoading) {
-    return <div className="p-8 font-medium text-gray-500"></div>;
+    return <PageLoader label="Loading team data..." />;
   }
 
   return (

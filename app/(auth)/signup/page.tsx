@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { CheckSquare, Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react";
+import { CheckSquare, Eye, EyeOff, Loader2, LockKeyhole, Mail, User } from "lucide-react";
 import axios from "axios";
 import { register } from "@/libs/api/auth";
 import { useNotification } from "@/components/providers/NotificationProvider";
@@ -74,7 +74,10 @@ export default function Signup() {
             <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700">Password</label>
             <div className="relative"><LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} /><input id="password" type={showPassword ? "text" : "password"} autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Create a password" className="w-full rounded-lg border border-slate-200 py-2.5 pr-10 pl-10 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100" /><button type="button" onClick={() => setShowPassword((visible) => !visible)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
           </div>
-          <button type="submit" disabled={isSubmitting} className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-60">{isSubmitting ? "Creating account..." : "Create account"}</button>
+          <button type="submit" disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 disabled:cursor-not-allowed disabled:opacity-60">
+            {isSubmitting && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+            {isSubmitting ? "Creating account..." : "Create account"}
+          </button>
         </form>
         <p className="mt-8 text-center text-sm text-slate-500">Already have an account? <Link href="/login" className="font-semibold text-indigo-600 hover:text-indigo-700">Sign in</Link></p>
       </div>

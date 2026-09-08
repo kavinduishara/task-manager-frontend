@@ -49,7 +49,7 @@ export function NotificationProvider({
         clearNotification,
       }}
     >
-      <div className="fixed right-5 top-5 z-50 flex w-[90%] max-w-md flex-col gap-3">
+      <div className="fixed right-2 top-5 z-50 flex w-[90%] max-w-md flex-col gap-3">
         {notifications.map((notification) => (
           <NotificationCard
                 key={notification.id}
