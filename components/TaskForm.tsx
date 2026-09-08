@@ -56,6 +56,7 @@ export default function TaskForm({
     user?.role === "ADMIN" ||
     user?._id === creator?._id ||
     user?._id === assignee?._id;
+  const isDetailsReadOnly = isEditMode && (isViewMode || !canEditDetails);
 
   // --------------------------------
   // Fetch task when editing
@@ -197,13 +198,13 @@ export default function TaskForm({
               setPriority={setPriority}
               selectedTag={selectedTag}
               setSelectedTag={setSelectedTag}
-              isViewMode={isViewMode || !canEditDetails}
+              isViewMode={isDetailsReadOnly}
             />
 
             <TaskDescription
               description={description}
               setDescription={setDescription}
-              isViewMode={isViewMode || !canEditDetails}
+              isViewMode={isDetailsReadOnly}
             />
 
             <AssigTimeAndUser
@@ -214,7 +215,7 @@ export default function TaskForm({
               creator={displayedCreator}
               currentUser={user}
               isViewMode={isViewMode}
-              canEditDetails={canEditDetails}
+              canEditDetails={!isEditMode || canEditDetails}
             />
           </div>
 
