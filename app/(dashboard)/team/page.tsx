@@ -75,23 +75,12 @@ export default function TeamDirectoryPage() {
   }, [users, searchQuery]);
 
   if (isLoading) {
-    return <div className="p-8 font-medium text-gray-500">Loading directory data...</div>;
+    return <div className="p-8 font-medium text-gray-500"></div>;
   }
 
   return (
     <div className="min-h-screen bg-gray-50/50 p-8">
-      {/* Page Header */}
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <p className="text-xs font-semibold text-gray-400 mb-1">
-            WORKSPACE MANAGEMENT • Engineering & Product
-          </p>
-          <h1 className="text-2xl font-bold text-gray-900">Team Directory</h1>
-          <p className="text-sm text-gray-500">
-            Manage your project collaborators, roles, real-time presence, and assigned workloads.
-          </p>
-        </div>
-      </div>
+      
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

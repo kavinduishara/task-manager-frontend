@@ -32,14 +32,38 @@ export interface CardProps {
 }
 
 export const labelColors: Record<Label, string> = {
-  design: "bg-blue-100 text-blue-700",
-  development: "bg-green-100 text-green-700",
-  backend: "bg-purple-100 text-purple-700",
-  documentation: "bg-gray-100 text-gray-700",
-  feature: "bg-yellow-100 text-yellow-700",
-  frontend: "bg-cyan-100 text-cyan-700",
-  devops: "bg-orange-100 text-orange-700",
-  bug: "bg-red-100 text-red-700",
+  design: "blue",
+  development: "green",
+  backend: "purple",
+  documentation: "gray",
+  feature: "yellow",
+  frontend: "cyan",
+  devops: "orange",
+  bug: "red",
 };
 
+export const priorityStyles: Record<Priority, string> = {
+  Low: "slate",
+  Med: "blue",
+  High: "orange",
+  Urgent: "red",
+};
+
+export const labelTextColors: Record<Label, string> = {
+  design: "text-blue-500",
+  development: "text-green-500",
+  backend: "text-purple-500",
+  documentation: "text-gray-500",
+  feature: "text-yellow-500",
+  frontend: "text-cyan-500",
+  devops: "text-orange-500",
+  bug: "text-red-500",
+};
+
+export const priorityTextStyles: Record<Priority, string> = {
+  Low: "text-slate-500",
+  Med: "text-blue-500",
+  High: "text-orange-500",
+  Urgent: "text-red-500",
+};
 

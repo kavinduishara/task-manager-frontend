@@ -90,21 +90,11 @@ function UserDetails() {
             <MenuItem
             icon={User}
             label="View Profile"
-            onClick={() => console.log("View Profile clicked")}
+            onClick={() => router.push("/user")}
             >
                 <ArrowRight className="h-4 w-4 text-slate-400" />
             </MenuItem>
 
-
-            <MenuItem
-            icon={CheckSquare}
-            label="My Assigned Tasks"
-            onClick={() => console.log("My Assigned Tasks clicked")}
-            >
-                <span className="text-xs font-medium bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">
-                5
-                </span>
-            </MenuItem>
             <div className="my-1 border-t border-slate-100" />
 
             <MenuItem

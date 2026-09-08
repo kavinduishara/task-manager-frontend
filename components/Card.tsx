@@ -1,30 +1,20 @@
-import { labelColors, type CardProps } from "@/types/cardTypes";
+import {
+    labelColors,
+    labelTextColors,
+    priorityStyles,
+    priorityTextStyles,
+    type CardProps,
+} from "@/types/cardTypes";
 import { useDraggable } from "@dnd-kit/react";
 import { Clock, Dot } from "lucide-react";
 import Avatar from "./Avatar";
 import { useRouter } from "next/navigation";
 import isOverdue from "@/libs/util/checkpassdue";
+import formatRelativeTime from "@/libs/util/formatRelativeTime";
 
 
 
-function formatRelativeTime(date: Date | null) { 
-    if (!date) return ''; 
-    const elapsedSeconds = Math.round((date.getTime() - Date.now()) / 1000); 
-    const units = [ 
-        { unit: 'year', seconds: 31536000 }, 
-        { unit: 'month', seconds: 2592000 }, 
-        { unit: 'day', seconds: 86400 }, 
-        { unit: 'hour', seconds: 3600 }, 
-        { unit: 'minute', seconds: 60 }, 
-        { unit: 'second', seconds: 1 }, 
-    ] as const; 
-    const relativeUnit = units.find(({ seconds }) => 
-        Math.abs(elapsedSeconds) >= seconds) ?? units[units.length - 1]; 
-    const value = Math.round(elapsedSeconds / relativeUnit.seconds); 
-    return new Intl
-    .RelativeTimeFormat('en', { numeric: 'auto' })
-    .format(value, relativeUnit.unit); 
-}
+
 
 function Card({
     id,
@@ -37,12 +27,7 @@ function Card({
 }: CardProps) {
     const router = useRouter();
     const { ref } = useDraggable({ id });
-    const priorityStyles = {
-        Low: "bg-slate-100 text-slate-600",
-        Med: "bg-blue-100 text-blue-700",
-        High: "bg-orange-100 text-orange-700",
-        Urgent: "bg-red-100 text-red-700",
-    };
+    
 
     return (
         <div
@@ -52,16 +37,16 @@ function Card({
         >
             <div className="flex justify-between">
                {flag && (
-                    <div className={`text-xs p-2 rounded-sm w-fit font-semibold ${flag in labelColors ? labelColors[flag as keyof typeof labelColors] : "bg-gray-100 text-gray-700"}`}>
+                    <div
+                        className={`text-xs p-2 rounded-sm w-fit font-semibold bg-${labelColors[flag]}-100 ${labelTextColors[flag]}`}
+                    >
                         {flag.toLocaleUpperCase()}
                     </div>
                 )} 
 
                 {priority && (
                 <div
-                    className={`flex items-center justify-between  rounded px-1 text-xs font-medium ${
-                    priorityStyles[priority as keyof typeof priorityStyles]
-                    }`}
+                    className={`flex items-center justify-between rounded px-1 text-xs font-medium bg-${priorityStyles[priority]}-100 ${priorityTextStyles[priority]}`}
                 >
                     <Dot size={30} />
                     {priority}
