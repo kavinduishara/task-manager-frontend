@@ -1,6 +1,6 @@
 "use client"
 import Board from "@/components/Board";
-import BoardToolbar from "@/components/BoardToolbar";
+import BoardToolbar, { UNASSIGNED_FILTER } from "@/components/BoardToolbar";
 import { getTasks } from "@/libs/api/tasks";
 import { getAllUsers } from "@/libs/api/users";
 import { type Label, type Priority } from "@/types/cardTypes";
@@ -61,7 +61,11 @@ export default function Dashboard() {
       const matchesQuery = !normalizedQuery || task.title.toLowerCase().includes(normalizedQuery);
       const matchesLabel = !label || task.flag === label;
       const matchesPriority = !priority || task.priority === priority;
-      const matchesAssignee = !assignee || task.assignee?._id === assignee;
+      const matchesAssignee =
+        !assignee ||
+        (assignee === UNASSIGNED_FILTER
+          ? !task.assignee
+          : task.assignee?._id === assignee);
       return matchesQuery && matchesLabel && matchesPriority && matchesAssignee;
     });
 

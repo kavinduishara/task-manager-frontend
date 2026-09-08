@@ -4,6 +4,8 @@ import { ArrowDownUp, Search, X } from "lucide-react";
 import { PRIORITIES, TAGS, type Label, type Priority } from "@/types/cardTypes";
 import type { TaskUser } from "@/types/task";
 
+export const UNASSIGNED_FILTER = "__UNASSIGNED__";
+
 interface BoardToolbarProps {
   query: string;
   label: Label | "";
@@ -51,7 +53,10 @@ export default function BoardToolbar({
         label="User"
         value={assignee}
         onChange={onAssigneeChange}
-        options={users.map((user) => ({ value: user._id, label: user.name }))}
+        options={[
+          { value: UNASSIGNED_FILTER, label: "Unassigned" },
+          ...users.map((user) => ({ value: user._id, label: user.name })),
+        ]}
       />
 
       <button

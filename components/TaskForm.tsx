@@ -46,15 +46,22 @@ export default function TaskForm({
 
   const isEditMode = Boolean(taskId);
   const [isViewMode, setIsViewMode] = useState(isEditMode);
+  const displayedCreator = isEditMode ? creator : user;
+  const canEditTask =
+    user?.role === "ADMIN" ||
+    !assignee ||
+    user?._id === creator?._id ||
+    user?._id === assignee._id;
+  const canEditDetails =
+    user?.role === "ADMIN" ||
+    user?._id === creator?._id ||
+    user?._id === assignee?._id;
 
   // --------------------------------
   // Fetch task when editing
   // --------------------------------
   useEffect(() => {
-    if (!taskId) {
-      setCreator(user);
-      return;
-    }
+    if (!taskId) return;
 
     
 
@@ -88,7 +95,7 @@ export default function TaskForm({
     };
 
     fetchTask();
-  }, [taskId, user]);
+  }, [taskId]);
 
   // --------------------------------
   // Submit
@@ -109,11 +116,6 @@ export default function TaskForm({
       return;
     }
 
-    if (!assignee) {
-      showNotification("Please select an assignee","error");
-      return;
-    }
-
     if (!selectedTag) {
       showNotification("Please select a tag","error");
       return;
@@ -128,7 +130,7 @@ export default function TaskForm({
         priority,
         flag: selectedTag,
         status,
-        assignee: assignee._id,
+        ...(assignee ? { assignee: assignee._id } : {}),
         dueDate: dueDate || undefined,
       };
 
@@ -195,13 +197,13 @@ export default function TaskForm({
               setPriority={setPriority}
               selectedTag={selectedTag}
               setSelectedTag={setSelectedTag}
-              isViewMode={isViewMode}
+              isViewMode={isViewMode || !canEditDetails}
             />
 
             <TaskDescription
               description={description}
               setDescription={setDescription}
-              isViewMode={isViewMode}
+              isViewMode={isViewMode || !canEditDetails}
             />
 
             <AssigTimeAndUser
@@ -209,8 +211,10 @@ export default function TaskForm({
               setDueDate={setDueDate}
               assignee={assignee}
               setAssignee={setAssignee}
-              creator={creator}
+              creator={displayedCreator}
+              currentUser={user}
               isViewMode={isViewMode}
+              canEditDetails={canEditDetails}
             />
           </div>
 
@@ -248,7 +252,9 @@ export default function TaskForm({
               <button
                 onClick={() => setIsViewMode((previous) => !previous)}
                 type="button"
-                disabled={isEditMode && user?.role!=="ADMIN" && user?._id!==creator?._id}
+                disabled={
+                  !canEditTask
+                }
                 className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isViewMode?"Edit": "View"}

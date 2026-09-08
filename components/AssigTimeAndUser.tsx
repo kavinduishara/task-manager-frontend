@@ -12,14 +12,18 @@ function AssigTimeAndUser({
   assignee,
   setAssignee,
   creator,
-  isViewMode
+  currentUser,
+  isViewMode,
+  canEditDetails
 }: {
   dueDate: string;
   setDueDate: (date: string) => void;
   assignee:TaskUser|undefined|null;
   setAssignee: (assignee: TaskUser) => void;
   creator: TaskUser | null;
-  isViewMode:boolean
+  currentUser: UserDetails | null;
+  isViewMode:boolean;
+  canEditDetails: boolean;
 }) {
   const [assignees, setAssignees] = useState<UserDetails[]>([]);
   const [showList, setShowList] = useState(false);
@@ -41,6 +45,12 @@ function AssigTimeAndUser({
     setAssignee(assignee);
     setShowList(false);
   };
+
+  const selectableAssignees = currentUser?.role === "ADMIN"
+    ? assignees
+    : assignees.filter((user) =>
+        user._id === currentUser?._id || user._id === assignee?._id
+      );
 
   return (
     <Section number={3} title="Assignment & Timeline">
@@ -92,8 +102,8 @@ function AssigTimeAndUser({
           {showList && !isViewMode && (
             <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
               <div className="max-h-60 overflow-y-auto py-1">
-                {assignees.map((user) => {
-                  const isSelected =user===assignee
+                {selectableAssignees.map((user) => {
+                  const isSelected = user._id === assignee?._id
 
                   return (
                     <button
@@ -140,7 +150,7 @@ function AssigTimeAndUser({
           </label>
 
           <input
-          disabled={isViewMode}
+          disabled={isViewMode || !canEditDetails}
             type="date"
             required
             value={dueDate}
