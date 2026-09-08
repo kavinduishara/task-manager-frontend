@@ -3,9 +3,7 @@
 import { Task } from "@/types/task";
 import {
   labelColors,
-  labelTextColors,
   priorityStyles,
-  priorityTextStyles,
 } from "@/types/cardTypes";
 import { Clock } from "lucide-react";
 import formatRelativeTime from "@/libs/util/formatRelativeTime";
@@ -17,21 +15,18 @@ interface AssignedTaskCardProps {
 
 export const AssignedTaskCard = ({ task }: AssignedTaskCardProps) => {
   const currentFlag = task.flag || "feature";
-  const flagColor = labelColors[currentFlag];
-  const priorityColor = priorityStyles[task.priority];
-
   return (
     <div className="bg-gray-50/80 rounded-xl p-4 flex items-center justify-between shadow-sm hover:shadow transition-shadow mb-3">
       <div className="flex flex-col gap-1.5">
         {/* Badges */}
         <div className="flex items-center gap-2 text-xs">
           <span
-            className={`px-2 py-0.5 rounded text-[11px] font-semibold bg-${flagColor}-100 ${labelTextColors[currentFlag]}`}
+            className={`px-2 py-0.5 rounded text-[11px] font-semibold ${labelColors[currentFlag]}`}
           >
             {currentFlag}
           </span>
           <span
-            className={`px-2 py-0.5 rounded text-[11px] font-semibold bg-${priorityColor}-100 ${priorityTextStyles[task.priority]}`}
+            className={`px-2 py-0.5 rounded text-[11px] font-semibold ${priorityStyles[task.priority]}`}
           >
             {task.priority}
           </span>

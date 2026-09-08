@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  labelColors,
-  priorityStyles,
+  labelBarColors,
+  priorityBarColors,
   TAGS,
   PRIORITIES,
   type Label,
@@ -47,7 +47,7 @@ function DistributionSection<T extends string>({
             return (
               <div
                 key={key}
-                className={`h-full bg-${colors[key]}-500`}
+                className={colors[key]}
                 style={{ width: `${percentage}%` }}
                 title={`${key}: ${count} tasks (${Math.round(percentage)}%)`}
               />
@@ -67,7 +67,7 @@ function DistributionSection<T extends string>({
           return (
             <span key={key} className="flex items-center gap-1.5">
               <span
-                className={`w-2.5 h-2.5 rounded-full bg-${colors[key]}-500`}
+                className={`w-2.5 h-2.5 rounded-full ${colors[key]}`}
               />
               {key} ({count})
             </span>
@@ -84,10 +84,9 @@ export const TaskDistributionCard = ({ tasks }: TaskDistributionCardProps) => {
   const totalTasks = tasks.length;
 
   // Past due calculation
-  const now = new Date();
   const pastDueCount = tasks.filter((task) => {
     if (!task.dueDate) return false;
-    return new Date(task.dueDate);
+    return new Date(task.dueDate) < new Date() && task.status !== "DONE";
   }).length;
 
 
@@ -136,7 +135,7 @@ export const TaskDistributionCard = ({ tasks }: TaskDistributionCardProps) => {
         totalTasks={totalTasks}
         items={PRIORITIES}
         itemCounts={priorityCounts}
-        colors={priorityStyles}
+        colors={priorityBarColors}
       />
 
       {/* Label Progress Bar */}
@@ -145,7 +144,7 @@ export const TaskDistributionCard = ({ tasks }: TaskDistributionCardProps) => {
         totalTasks={totalTasks}
         items={TAGS}
         itemCounts={labelCounts}
-        colors={labelColors}
+        colors={labelBarColors}
       />
     </div>
   );

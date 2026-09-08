@@ -1,8 +1,6 @@
 import {
     labelColors,
-    labelTextColors,
     priorityStyles,
-    priorityTextStyles,
     type CardProps,
 } from "@/types/cardTypes";
 import { useDraggable } from "@dnd-kit/react";
@@ -38,7 +36,7 @@ function Card({
             <div className="flex justify-between">
                {flag && (
                     <div
-                        className={`text-xs p-2 rounded-sm w-fit font-semibold bg-${labelColors[flag]}-100 ${labelTextColors[flag]}`}
+                        className={`text-xs p-2 rounded-sm w-fit font-semibold ${labelColors[flag]}`}
                     >
                         {flag.toLocaleUpperCase()}
                     </div>
@@ -46,7 +44,7 @@ function Card({
 
                 {priority && (
                 <div
-                    className={`flex items-center justify-between rounded px-1 text-xs font-medium bg-${priorityStyles[priority]}-100 ${priorityTextStyles[priority]}`}
+                    className={`flex items-center justify-between rounded px-1 text-xs font-medium ${priorityStyles[priority]}`}
                 >
                     <Dot size={30} />
                     {priority}
