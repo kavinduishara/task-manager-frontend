@@ -11,12 +11,14 @@ function AssigTimeAndUser({
   setDueDate,
   assignee,
   setAssignee,
+  creator,
   isViewMode
 }: {
   dueDate: string;
   setDueDate: (date: string) => void;
   assignee:TaskUser|undefined|null;
   setAssignee: (assignee: TaskUser) => void;
+  creator: TaskUser | null;
   isViewMode:boolean
 }) {
   const [assignees, setAssignees] = useState<UserDetails[]>([]);
@@ -43,6 +45,24 @@ function AssigTimeAndUser({
   return (
     <Section number={3} title="Assignment & Timeline">
       <div className="grid grid-cols-3 gap-4 mb-4">
+        {/* Creator */}
+        <div>
+          <label className="block text-xs font-medium text-slate-600 mb-1">
+            Creator
+          </label>
+
+          <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700">
+            {creator ? (
+              <>
+                <Avatar user={creator} />
+                <span>{creator.name}</span>
+              </>
+            ) : (
+              <span className="text-slate-400">Loading creator...</span>
+            )}
+          </div>
+        </div>
+
         {/* Assignee */}
         <div className="relative">
           <label className="block text-xs font-medium text-slate-600 mb-1">

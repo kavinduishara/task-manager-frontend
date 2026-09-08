@@ -37,7 +37,7 @@ export default function TaskForm({
   const [selectedTag, setSelectedTag] = useState<Label | undefined>();
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState<TaskUser | null | undefined>();
-  const [creator, setCreator] = useState<string>();
+  const [creator, setCreator] = useState<TaskUser | null>(null);
   const [dueDate, setDueDate] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,7 +51,10 @@ export default function TaskForm({
   // Fetch task when editing
   // --------------------------------
   useEffect(() => {
-    if (!taskId) return;
+    if (!taskId) {
+      setCreator(user);
+      return;
+    }
 
     
 
@@ -67,7 +70,7 @@ export default function TaskForm({
         setPriority(task.priority);
         setSelectedTag(task.flag);
         setAssignee(task.assignee);
-        setCreator(task.assignee?._id)
+        setCreator(task.creator)
 
 
         if (task.dueDate) {
@@ -85,7 +88,7 @@ export default function TaskForm({
     };
 
     fetchTask();
-  }, [taskId]);
+  }, [taskId, user]);
 
   // --------------------------------
   // Submit
@@ -206,6 +209,7 @@ export default function TaskForm({
               setDueDate={setDueDate}
               assignee={assignee}
               setAssignee={setAssignee}
+              creator={creator}
               isViewMode={isViewMode}
             />
           </div>
@@ -244,7 +248,7 @@ export default function TaskForm({
               <button
                 onClick={() => setIsViewMode((previous) => !previous)}
                 type="button"
-                disabled={isEditMode && user?.role!=="ADMIN" && user?._id!==creator}
+                disabled={isEditMode && user?.role!=="ADMIN" && user?._id!==creator?._id}
                 className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isViewMode?"Edit": "View"}
