@@ -65,6 +65,55 @@ Run `npm run build` before deploying. A production server must be started with `
 6. Open `/team` to view team members.
 7. Use the account menu to view your profile, review your tasks, or log out.
 
+## User Manual
+
+### Sign in or create an account
+
+1. Open the TaskFlow website.
+2. Select **Sign up** to create a new account, or select **Log in** if you already have an account.
+3. Enter your details and follow the instructions on the screen.
+
+### View your tasks
+
+The dashboard shows tasks in three columns:
+
+- **To do**: Tasks that have not started.
+- **In progress**: Tasks currently being worked on.
+- **Done**: Completed tasks.
+
+Use the search box and filters to find tasks by title, label, priority, or assigned person. You can also sort tasks by due date.
+
+### Create a task
+
+1. Select **New task**.
+2. Enter a task title and description.
+3. Choose a status, priority, and label.
+4. Add a due date or assign the task to a team member if needed.
+5. Select **Create Card**.
+
+The new task will appear on the dashboard.
+
+### Update a task
+
+1. Select a task from the dashboard.
+2. Select **Edit Mode**.
+3. Change the details you need to update.
+4. Select **Update Task**.
+
+You can move a task to another status by dragging it to a different dashboard column.
+
+### Delete a task
+
+1. Open the task you want to remove.
+2. Select **Delete**.
+3. Select **Delete task** to confirm, or **Keep task** to cancel.
+
+Only the person who created the task and administrators can delete it. Other users will see the delete option disabled.
+
+### View team members and your profile
+
+Open **Team** to view available team members. Use the account menu to view your profile, review your tasks, or log out.
+
 All routes except `/login`, `/signup`, and static assets require the `token` authentication cookie. When the API returns `401`, the client redirects to `/login`.
 
 ## Configuration
