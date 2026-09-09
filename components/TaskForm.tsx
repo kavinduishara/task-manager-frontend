@@ -14,6 +14,7 @@ import type { TaskStatus, TaskUser } from "@/types/task";
 
 import {
   createTask,
+  deleteTask,
   getTask,
   updateTask,
 } from "@/libs/api/tasks";
@@ -41,6 +42,7 @@ export default function TaskForm({
   const [dueDate, setDueDate] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
 
@@ -56,6 +58,8 @@ export default function TaskForm({
     user?.role === "ADMIN" ||
     user?._id === creator?._id ||
     user?._id === assignee?._id;
+  const canDeleteTask =
+    user?.role === "ADMIN" || user?._id === creator?._id;
   const isDetailsReadOnly = isEditMode && (isViewMode || !canEditDetails);
 
   // --------------------------------
@@ -160,6 +164,33 @@ export default function TaskForm({
     }
   };
 
+  const handleTaskDeletion = async () => {
+    if (!taskId || !window.confirm("Are you sure you want to delete this task?")) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await deleteTask(taskId);
+      showNotification("Task deleted", "success");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Deleting task failed:", error);
+
+      if (axios.isAxiosError(error)) {
+        showNotification(
+          error.response?.data?.message ?? "Failed to delete task.",
+          "error"
+        );
+      } else {
+        showNotification("Failed to delete task.", "error");
+      }
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   // --------------------------------
   // Cancel
   // --------------------------------
@@ -226,7 +257,7 @@ export default function TaskForm({
             <button
               type="button"
               onClick={handleCancel}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isDeleting}
               className="rounded-lg bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 transition-colors hover:bg-indigo-200 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Cancel
@@ -234,11 +265,33 @@ export default function TaskForm({
 
             <div className="flex gap-2">
 
+              {isEditMode && (
+                <button
+                  type="button"
+                  onClick={handleTaskDeletion}
+                  disabled={isSubmitting || isDeleting || !canDeleteTask}
+                  className="flex items-center gap-1.5 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isDeleting ? "Deleting..." : "Delete"}
+                </button>
+              )}
 
-              {/* Submit */}
+
+              {isEditMode &&
+              <button
+                onClick={() => setIsViewMode((previous) => !previous)}
+                type="button"
+                disabled={
+                  !canEditTask || isSubmitting || isDeleting
+                }
+                className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Switch to {isViewMode?" Edit ": " View "}Mode
+              </button>}
+              
               <button
                 type="submit"
-                disabled={isSubmitting || isViewMode}
+                disabled={isSubmitting || isDeleting || isViewMode}
                 className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting
@@ -249,17 +302,7 @@ export default function TaskForm({
                     ? "Update Task"
                     : "Create Card"}
               </button>
-              {isEditMode &&
-              <button
-                onClick={() => setIsViewMode((previous) => !previous)}
-                type="button"
-                disabled={
-                  !canEditTask
-                }
-                className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isViewMode?"Edit": "View"}
-              </button>}
+              
 
             </div>
           </div>
