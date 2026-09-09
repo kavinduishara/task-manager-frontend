@@ -27,6 +27,9 @@ function Column({ id, title, cards }: { id: TaskStatus; title: string; cards: Ta
             priority={card.priority}
             status={card.status}
             assignee={card.assignee} 
+            creatorId={card.creator._id}
+            assigneeId={card.assignee?._id}
+            subtasks={card.subtasks}
             dueDate={card.dueDate ? new Date(card.dueDate) : null}
           />
         ))}

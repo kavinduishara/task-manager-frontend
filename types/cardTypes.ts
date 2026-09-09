@@ -28,6 +28,9 @@ export interface CardProps {
   priority?: Priority;
   status?: string;
   assignee?: CardAssignee | null;
+  creatorId?: string;
+  assigneeId?: string | null;
+  subtasks?: Array<{ _id?: string; task: string; checked: boolean }>;
   dueDate?: Date | null;
 }
 
