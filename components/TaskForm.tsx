@@ -9,9 +9,10 @@ import TaskDetails from "@/components/TaskDetails";
 import TaskDescription from "@/components/TaskDescription";
 import AssigTimeAndUser from "@/components/AssigTimeAndUser";
 import ConfirmationCard from "@/components/ConfirmationCard";
+import SubtaskSection from "@/components/SubtaskSection";
 
 import { Priority, type Label } from "@/types/cardTypes";
-import type { TaskStatus, TaskUser } from "@/types/task";
+import type { Subtask, TaskStatus, TaskUser } from "@/types/task";
 
 import {
   createTask,
@@ -41,6 +42,7 @@ export default function TaskForm({
   const [assignee, setAssignee] = useState<TaskUser | null | undefined>();
   const [creator, setCreator] = useState<TaskUser | null>(null);
   const [dueDate, setDueDate] = useState("");
+  const [subtasks, setSubtasks] = useState<Subtask[]>([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -62,6 +64,11 @@ export default function TaskForm({
     user?._id === assignee?._id;
   const canDeleteTask =
     user?.role === "ADMIN" || user?._id === creator?._id;
+  const canEditSubtasks =
+    user?.role === "ADMIN" ||
+    !isEditMode ||
+    user?._id === creator?._id ||
+    user?._id === assignee?._id;
   const isDetailsReadOnly = isEditMode && (isViewMode || !canEditDetails);
 
   // --------------------------------
@@ -85,6 +92,13 @@ export default function TaskForm({
         setSelectedTag(task.flag);
         setAssignee(task.assignee);
         setCreator(task.creator)
+        setSubtasks(
+          (task.subtasks ?? []).map((subtask) => ({
+            _id: subtask._id,
+            task: subtask.task ?? "",
+            checked: Boolean(subtask.checked),
+          }))
+        );
 
 
         if (task.dueDate) {
@@ -137,8 +151,9 @@ export default function TaskForm({
         priority,
         flag: selectedTag,
         status,
-        ...(assignee ? { assignee: assignee._id } : {}),
-        dueDate: dueDate || undefined,
+        assignee: assignee?._id ?? null,
+        dueDate: dueDate || null,
+        subtasks: subtasks.filter((subtask) => subtask.task.trim()),
       };
 
       if (isEditMode) {
@@ -283,6 +298,14 @@ export default function TaskForm({
               currentUser={user}
               isViewMode={isViewMode}
               canEditDetails={!isEditMode || canEditDetails}
+            />
+
+            <SubtaskSection
+              subtasks={subtasks}
+              setSubtasks={setSubtasks}
+              taskId={taskId}
+              isViewMode={isViewMode}
+              canEditSubtasks={canEditSubtasks}
             />
           </div>
 

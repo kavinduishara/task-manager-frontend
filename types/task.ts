@@ -14,6 +14,12 @@ export interface TaskUser {
   email: string;
 }
 
+export interface Subtask {
+  _id?: string;
+  task: string;
+  checked: boolean;
+}
+
 export interface Task {
   _id: string;
   title: string;
@@ -24,6 +30,7 @@ export interface Task {
   creator: TaskUser;
   assignee: TaskUser | null;
   dueDate: string | null;
+  subtasks: Subtask[];
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -55,14 +62,16 @@ export interface TaskMutationResponse {
   task: Task;
 }
 
-export interface CreateTaskInput {
+export interface TaskMutationInput {
   title: string;
   description: string;
-  priority: string;
-  flag?: string;
+  priority: Priority;
+  flag: Label;
   status: TaskStatus;
-  assignee?: string;
-  dueDate?: string;
+  assignee: string | null;
+  dueDate: string | null;
+  subtasks?: Subtask[];
 }
 
-export type UpdateTaskInput = Partial<CreateTaskInput>;
+export type CreateTaskInput = TaskMutationInput;
+export type UpdateTaskInput = TaskMutationInput;

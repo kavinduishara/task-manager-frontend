@@ -39,6 +39,30 @@ export async function updateTask(
   return response.data.task;
 }
 
+export async function updateSubtask(
+  taskId: string,
+  subtaskId: string,
+  data: { task?: string; checked?: boolean }
+): Promise<Task> {
+  const response = await api.patch<TaskMutationResponse>(
+    `/tasks/${taskId}/subtasks/${subtaskId}`,
+    data
+  );
+
+  return response.data.task;
+}
+
+export async function deleteSubtask(
+  taskId: string,
+  subtaskId: string
+): Promise<Task> {
+  const response = await api.delete<TaskMutationResponse>(
+    `/tasks/${taskId}/subtasks/${subtaskId}`
+  );
+
+  return response.data.task;
+}
+
 
 export async function updateTaskStatus(
   id: string,
