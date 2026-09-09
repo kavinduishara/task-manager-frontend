@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { LayoutDashboard } from "lucide-react";
+import { Eye, LayoutDashboard, Pencil } from "lucide-react";
 
 import Card from "@/components/Card";
 import TaskDetails from "@/components/TaskDetails";
@@ -226,6 +226,33 @@ export default function TaskForm({
           onSubmit={isViewMode ? undefined : handleTaskSubmission}
           className="flex min-h-0 flex-col overflow-hidden rounded-md bg-white p-4 lg:col-span-2"
         >
+          <div className="mb-5 flex shrink-0 items-center justify-between border-b border-slate-100 pb-4">
+            <div>
+              <h1 className="text-lg font-semibold text-slate-900">
+                {isEditMode ? (isViewMode ? "Task details" : "Edit task") : "Create task"}
+              </h1>
+              <p className="mt-1 text-sm text-slate-500">
+                {isEditMode
+                  ? isViewMode
+                    ? "Review the task information below."
+                    : "Update the task information below."
+                  : "Add the details for your new task."}
+              </p>
+            </div>
+
+            {isEditMode && (
+              <button
+                onClick={() => setIsViewMode((previous) => !previous)}
+                type="button"
+                disabled={!canEditTask || isSubmitting || isDeleting}
+                className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isViewMode ? <Pencil size={16} /> : <Eye size={16} />}
+                {isViewMode ? "Edit task" : "View task"}
+              </button>
+            )}
+          </div>
+
           {/* Form Content */}
           <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto">
 
@@ -286,18 +313,6 @@ export default function TaskForm({
               )}
 
 
-              {isEditMode &&
-              <button
-                onClick={() => setIsViewMode((previous) => !previous)}
-                type="button"
-                disabled={
-                  !canEditTask || isSubmitting || isDeleting
-                }
-                className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Switch to {isViewMode?" Edit ": " View "}Mode
-              </button>}
-              
               <button
                 type="submit"
                 disabled={isSubmitting || isDeleting || isViewMode}
