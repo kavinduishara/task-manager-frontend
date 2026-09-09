@@ -8,6 +8,7 @@ import Card from "@/components/Card";
 import TaskDetails from "@/components/TaskDetails";
 import TaskDescription from "@/components/TaskDescription";
 import AssigTimeAndUser from "@/components/AssigTimeAndUser";
+import ConfirmationCard from "@/components/ConfirmationCard";
 
 import { Priority, type Label } from "@/types/cardTypes";
 import type { TaskStatus, TaskUser } from "@/types/task";
@@ -43,6 +44,7 @@ export default function TaskForm({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
 
@@ -165,13 +167,14 @@ export default function TaskForm({
   };
 
   const handleTaskDeletion = async () => {
-    if (!taskId || !window.confirm("Are you sure you want to delete this task?")) {
+    if (!taskId) {
       return;
     }
 
     try {
       setIsDeleting(true);
       await deleteTask(taskId);
+      setIsDeleteConfirmationOpen(false);
       showNotification("Task deleted", "success");
       router.push("/");
       router.refresh();
@@ -188,6 +191,12 @@ export default function TaskForm({
       }
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteConfirmationCancel = () => {
+    if (!isDeleting) {
+      setIsDeleteConfirmationOpen(false);
     }
   };
 
@@ -268,7 +277,7 @@ export default function TaskForm({
               {isEditMode && (
                 <button
                   type="button"
-                  onClick={handleTaskDeletion}
+                  onClick={() => setIsDeleteConfirmationOpen(true)}
                   disabled={isSubmitting || isDeleting || !canDeleteTask}
                   className="flex items-center gap-1.5 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-60"
                 >
@@ -351,6 +360,15 @@ export default function TaskForm({
         </div>
 
       </div>
+      <ConfirmationCard
+        isOpen={isDeleteConfirmationOpen}
+        message="Are you sure you want to delete this task?"
+        confirmLabel="Delete task"
+        cancelLabel="Keep task"
+        isLoading={isDeleting}
+        onConfirm={handleTaskDeletion}
+        onCancel={handleDeleteConfirmationCancel}
+      />
     </div>
   );
 }
