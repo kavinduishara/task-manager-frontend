@@ -52,6 +52,18 @@ export async function updateSubtask(
   return response.data.task;
 }
 
+export async function createSubtask(
+  taskId: string,
+  data: { task: string }
+): Promise<Task> {
+  const response = await api.post<TaskMutationResponse>(
+    `/tasks/${taskId}/subtasks`,
+    data
+  );
+
+  return response.data.task;
+}
+
 export async function deleteSubtask(
   taskId: string,
   subtaskId: string

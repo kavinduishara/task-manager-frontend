@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, LayoutDashboard, Pencil } from "lucide-react";
+import { AlertCircle, Eye, LayoutDashboard, Pencil } from "lucide-react";
 
 import Card from "@/components/Card";
 import TaskDetails from "@/components/TaskDetails";
@@ -40,6 +40,7 @@ export default function TaskForm({
   const [selectedTag, setSelectedTag] = useState<Label | undefined>();
   const [description, setDescription] = useState("");
   const [assignee, setAssignee] = useState<TaskUser | null | undefined>();
+  const [initialAssignee, setInitialAssignee] = useState<TaskUser | null | undefined>();
   const [creator, setCreator] = useState<TaskUser | null>(null);
   const [dueDate, setDueDate] = useState("");
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
@@ -60,16 +61,32 @@ export default function TaskForm({
     user?._id === assignee._id;
   const canEditDetails =
     user?.role === "ADMIN" ||
-    user?._id === creator?._id ||
-    user?._id === assignee?._id;
+    user?._id === creator?._id;
   const canDeleteTask =
     user?.role === "ADMIN" || user?._id === creator?._id;
   const canEditSubtasks =
-    user?.role === "ADMIN" ||
-    !isEditMode ||
-    user?._id === creator?._id ||
-    user?._id === assignee?._id;
+    !(
+      isEditMode &&
+      !initialAssignee &&
+      user?.role !== "ADMIN" &&
+      user?._id !== creator?._id
+    ) &&
+    (user?.role === "ADMIN" ||
+      !isEditMode ||
+      user?._id === creator?._id ||
+      user?._id === assignee?._id);
   const isDetailsReadOnly = isEditMode && (isViewMode || !canEditDetails);
+  const isAssigneeSubtaskOnly =
+    isEditMode &&
+    !isViewMode &&
+    user?.role !== "ADMIN" &&
+    user?._id === assignee?._id &&
+    user?._id !== creator?._id;
+  const isUnassignedSelfAssignOnly =
+    isEditMode &&
+    !initialAssignee &&
+    user?.role !== "ADMIN" &&
+    user?._id !== creator?._id;
 
   // --------------------------------
   // Fetch task when editing
@@ -91,6 +108,7 @@ export default function TaskForm({
         setPriority(task.priority);
         setSelectedTag(task.flag);
         setAssignee(task.assignee);
+        setInitialAssignee(task.assignee);
         setCreator(task.creator)
         setSubtasks(
           (task.subtasks ?? []).map((subtask) => ({
@@ -270,6 +288,24 @@ export default function TaskForm({
 
           {/* Form Content */}
           <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto">
+
+            {isAssigneeSubtaskOnly && (
+              <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
+                <AlertCircle size={17} className="mt-0.5 shrink-0" />
+                <p>
+                  As the assignee, you can only update this task&apos;s subtasks.
+                </p>
+              </div>
+            )}
+
+            {isUnassignedSelfAssignOnly && (
+              <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
+                <AlertCircle size={17} className="mt-0.5 shrink-0" />
+                <p>
+                  This task is unassigned. You may assign it to yourself, but cannot edit any other task details.
+                </p>
+              </div>
+            )}
 
             <TaskDetails
               title={title}
